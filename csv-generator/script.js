@@ -403,25 +403,25 @@
       })
       .then(function(data) {
         var text = "";
-        // Try common response shapes
-        if (data.data) {
-          text = typeof data.data === "string" ? data.data : (data.data.content || data.data.text || data.data.message || "");
-        } else if (data.result) {
+        // Response format: { status: true, data: { response: "..." } }
+        if (data && data.data && data.data.response) {
+          text = data.data.response;
+        } else if (data && data.data && typeof data.data === "string") {
+          text = data.data;
+        } else if (data && data.result) {
           text = typeof data.result === "string" ? data.result : (data.result.content || data.result.text || "");
-        } else if (data.message) {
+        } else if (data && data.message) {
           text = data.message;
-        } else if (data.choices && data.choices[0]) {
-          text = data.choices[0].message ? data.choices[0].message.content : (data.choices[0].text || "");
-        } else if (typeof data === "string") {
-          text = data;
         }
 
         // Cleanup
         text = String(text || "").trim();
-        // Remove think tags if present
+        // Remove think tags
         text = text.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
         // Remove quotes
         text = text.replace(/^["'`]+|["'`]+$/g, "").trim();
+        // Remove numbering like "1. " or "- "
+        text = text.replace(/^\d+\.\s*/, "").replace(/^[-•]\s*/, "").trim();
         // Take first line only
         text = text.split("\n")[0].trim();
 
