@@ -255,10 +255,6 @@ body.page {
 }
 
 /* AI Generate Section */
-.ai-config {
-  margin-bottom: 12px;
-}
-
 .ai-settings-toggle {
   font-size: 13px;
   color: var(--ink);
@@ -274,28 +270,6 @@ body.page {
   background: #14130f;
 }
 
-.ai-loading {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.ai-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid var(--hairline-strong);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
 .btn-ai {
   border: 1px solid var(--hairline-strong);
   background: transparent;
@@ -305,6 +279,7 @@ body.page {
   font-size: 12px;
   cursor: pointer;
   white-space: nowrap;
+  margin-top: 6px;
 }
 
 .btn-ai:disabled {

@@ -372,104 +372,71 @@
   renderDosenList("");
 
   // ── AI Generate Uraian ────────────────────────────────────────────────────
-  var AI_STORAGE_KEY = "eta_ai_config";
-
-  var aiBaseUrlEl = document.getElementById("aiBaseUrl");
-  var aiApiKeyEl = document.getElementById("aiApiKey");
-  var aiModelEl = document.getElementById("aiModel");
-  var aiSaveBtn = document.getElementById("aiSaveConfig");
-  var aiSaveStatus = document.getElementById("aiSaveStatus");
-
-  // Load saved config
-  function loadAiConfig() {
-    try {
-      var saved = JSON.parse(localStorage.getItem(AI_STORAGE_KEY) || "{}");
-      if (saved.baseUrl) aiBaseUrlEl.value = saved.baseUrl;
-      if (saved.apiKey) aiApiKeyEl.value = saved.apiKey;
-      if (saved.model) aiModelEl.value = saved.model;
-    } catch (e) {}
-  }
-
-  function saveAiConfig() {
-    var config = {
-      baseUrl: aiBaseUrlEl.value.trim(),
-      apiKey: aiApiKeyEl.value.trim(),
-      model: aiModelEl.value.trim()
-    };
-    localStorage.setItem(AI_STORAGE_KEY, JSON.stringify(config));
-    aiSaveStatus.textContent = "✓ Tersimpan";
-    setTimeout(function() { aiSaveStatus.textContent = ""; }, 2000);
-  }
-
-  function getAiConfig() {
-    try {
-      return JSON.parse(localStorage.getItem(AI_STORAGE_KEY) || "{}");
-    } catch (e) { return {}; }
-  }
+  var AI_API_URL = "https://api.siputzx.my.id/api/ai/deepseekr1";
 
   function generateUraian(posisi, textareaEl, btnEl) {
-    var config = getAiConfig();
-    if (!config.baseUrl || !config.apiKey || !config.model) {
-      alert("Set API dulu di bagian ✨ AI Uraian → Pengaturan API");
-      return;
-    }
-
     var currentText = textareaEl.value.trim();
-    var prompt = "Kamu adalah asisten mahasiswa skripsi. Generate 1 kalimat pendek uraian bimbingan skripsi untuk posisi " + posisi + ". "
-      + "Kalimat harus singkat (5-12 kata), natural seperti mahasiswa menulis catatan bimbingan. "
-      + "Contoh: 'Perbaikan penulisan pada indentasi sub-bab', 'Fiksasi menggunakan VGG-19', 'Perbaikan flowchart bab 3'. "
-      + "Jangan pakai tanda petik. Cukup 1 kalimat saja, langsung ke inti.";
 
+    var systemPrompt = "Kamu adalah asisten mahasiswa skripsi Indonesia. "
+      + "Tugasmu generate 1 kalimat pendek uraian bimbingan skripsi. "
+      + "Kalimat harus singkat (5-12 kata), natural seperti mahasiswa menulis catatan konsultasi. "
+      + "Contoh output: Perbaikan penulisan pada indentasi sub-bab | Fiksasi menggunakan VGG-19 | Perbaikan flowchart bab 3 pada sub bab perancangan proses | Pembahasan topik judul | Perbaikan penulisan rata kiri kanan | Italic pada kata asing di perbaiki lagi. "
+      + "JANGAN pakai tanda petik. JANGAN penjelasan. Cukup 1 kalimat langsung ke inti. JANGAN GUNAKAN TAG THINK DAN SEBAGAINYA.";
+
+    var userPrompt = "Generate 1 uraian bimbingan untuk posisi " + posisi + ".";
     if (currentText) {
-      prompt += " Konteks sebelumnya: " + currentText + ". Buat variasi yang berbeda tapi masih relevan.";
+      userPrompt += " Buat variasi berbeda dari: " + currentText;
     }
 
     btnEl.disabled = true;
     btnEl.textContent = "⏳";
 
-    var baseUrl = config.baseUrl.replace(/\/+$/, "");
-    var endpoint = baseUrl + "/chat/completions";
+    var url = AI_API_URL
+      + "?prompt=" + encodeURIComponent(userPrompt)
+      + "&system=" + encodeURIComponent(systemPrompt)
+      + "&temperature=0.8";
 
-    fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + config.apiKey
-      },
-      body: JSON.stringify({
-        model: config.model,
-        messages: [
-          { role: "system", content: prompt },
-          { role: "user", content: "Generate 1 uraian bimbingan untuk posisi " + posisi }
-        ],
-        max_tokens: 60,
-        temperature: 0.8
+    fetch(url)
+      .then(function(res) {
+        if (!res.ok) throw new Error("API error: " + res.status);
+        return res.json();
       })
-    })
-    .then(function(res) {
-      if (!res.ok) throw new Error("API error: " + res.status);
-      return res.json();
-    })
-    .then(function(data) {
-      var text = "";
-      if (data.choices && data.choices[0] && data.choices[0].message) {
-        text = data.choices[0].message.content.trim();
-      }
-      // Bersihkan tanda petik kalau AI masih naro
-      text = text.replace(/^["']+|["']+$/g, "").trim();
-      if (text) {
-        textareaEl.value = text;
-      }
-    })
-    .catch(function(err) {
-      alert("Gagal generate: " + err.message);
-    })
-    .finally(function() {
-      btnEl.disabled = false;
-      btnEl.textContent = "✨";
-    });
-  }
+      .then(function(data) {
+        var text = "";
+        // Try common response shapes
+        if (data.data) {
+          text = typeof data.data === "string" ? data.data : (data.data.content || data.data.text || data.data.message || "");
+        } else if (data.result) {
+          text = typeof data.result === "string" ? data.result : (data.result.content || data.result.text || "");
+        } else if (data.message) {
+          text = data.message;
+        } else if (data.choices && data.choices[0]) {
+          text = data.choices[0].message ? data.choices[0].message.content : (data.choices[0].text || "");
+        } else if (typeof data === "string") {
+          text = data;
+        }
 
-  aiSaveBtn.addEventListener("click", saveAiConfig);
-  loadAiConfig();
+        // Cleanup
+        text = String(text || "").trim();
+        // Remove think tags if present
+        text = text.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
+        // Remove quotes
+        text = text.replace(/^["'`]+|["'`]+$/g, "").trim();
+        // Take first line only
+        text = text.split("\n")[0].trim();
+
+        if (text) {
+          textareaEl.value = text;
+        } else {
+          alert("AI tidak mengembalikan hasil. Coba lagi.");
+        }
+      })
+      .catch(function(err) {
+        alert("Gagal generate: " + err.message);
+      })
+      .finally(function() {
+        btnEl.disabled = false;
+        btnEl.textContent = "✨";
+      });
+  }
 })();
