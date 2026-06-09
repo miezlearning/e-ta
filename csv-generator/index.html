@@ -39,6 +39,25 @@
         <p class="hint">Tanggal auto jadi DD-MM-YYYY saat export. Dosen bisa pakai NIP atau nama lengkap/partial.</p>
       </section>
 
+      <!-- AI Config -->
+      <section class="panel" id="aiPanel">
+        <h2 class="section-title">✨ AI Uraian</h2>
+        <p class="hint" style="margin:0 0 12px">Klik tombol ✨ di kolom uraian buat generate otomatis. Set API dulu di bawah.</p>
+        <details id="aiSettingsDetails">
+          <summary class="ai-settings-toggle">⚙️ Pengaturan API</summary>
+          <div class="ai-settings-body">
+            <label class="label" for="aiBaseUrl">Base URL</label>
+            <input id="aiBaseUrl" type="text" class="field" placeholder="https://token-plan-sgp.xiaomimimo.com/v1" />
+            <label class="label" for="aiApiKey">API Key</label>
+            <input id="aiApiKey" type="password" class="field" placeholder="API key kamu..." />
+            <label class="label" for="aiModel">Model</label>
+            <input id="aiModel" type="text" class="field" placeholder="mimo-v2.5-pro" />
+            <button id="aiSaveConfig" class="btn btn-secondary" style="margin-top:8px">Simpan</button>
+            <span id="aiSaveStatus" class="hint" style="margin-left:8px"></span>
+          </div>
+        </details>
+      </section>
+
       <section class="panel">
         <h2 class="section-title">Format CSV</h2>
         <pre class="code-block">tanggal,posisi,dosen,uraian

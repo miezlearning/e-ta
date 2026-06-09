@@ -251,6 +251,69 @@ body.page {
   letter-spacing: 0.88px;
   color: var(--muted);
   margin-bottom: 6px;
+  margin-top: 10px;
+}
+
+/* AI Generate Section */
+.ai-config {
+  margin-bottom: 12px;
+}
+
+.ai-settings-toggle {
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.ai-settings-body {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: #14130f;
+}
+
+.ai-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ai-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--hairline-strong);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.btn-ai {
+  border: 1px solid var(--hairline-strong);
+  background: transparent;
+  color: var(--primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-ai:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none !important;
 }
 
 @media (max-width: 720px) {
