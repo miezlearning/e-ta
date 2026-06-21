@@ -1,174 +1,7 @@
 (function() {
   "use strict";
 
-  var tableBody = document.getElementById("tableBody");
-  var addRowBtn = document.getElementById("addRow");
-  var downloadBtn = document.getElementById("downloadCsv");
-  var clearBtn = document.getElementById("clearAll");
-
-  function createCellInput(type, value, options, defaultValue, placeholder) {
-    var el;
-    if (type === "select") {
-      el = document.createElement("select");
-      (options || []).forEach(function(opt) {
-        var o = document.createElement("option");
-        o.value = opt;
-        o.textContent = opt;
-        el.appendChild(o);
-      });
-      el.value = value || defaultValue || "";
-    } else if (type === "textarea") {
-      el = document.createElement("textarea");
-      el.value = value || "";
-      if (placeholder) el.placeholder = placeholder;
-    } else {
-      el = document.createElement("input");
-      el.type = type;
-      el.value = value || "";
-      if (placeholder) el.placeholder = placeholder;
-    }
-    el.className = "field";
-    if (type === "textarea") {
-      el.className += " field-textarea";
-    }
-    return el;
-  }
-
-  function addRow(data) {
-    var tr = document.createElement("tr");
-
-    var tdDate = document.createElement("td");
-    var tdPosisi = document.createElement("td");
-    var tdDosen = document.createElement("td");
-    var tdUraian = document.createElement("td");
-    var tdActions = document.createElement("td");
-
-    tdDate.className = "table-cell";
-    tdPosisi.className = "table-cell";
-    tdDosen.className = "table-cell";
-    tdUraian.className = "table-cell";
-    tdActions.className = "table-cell";
-
-    tdDate.appendChild(createCellInput("date", data && data.date));
-    tdPosisi.appendChild(createCellInput("select", data && data.posisi, ["Proposal", "Hasil", "Pendadaran"], "Proposal"));
-    tdDosen.appendChild(createCellInput("text", data && data.dosen, null, null, "NIP atau nama dosen"));
-    var uraianField = createCellInput("textarea", data && data.uraian, null, null, "Isi bimbingan");
-    tdUraian.appendChild(uraianField);
-
-    var btnAi = document.createElement("button");
-    btnAi.textContent = "✨";
-    btnAi.className = "btn-ai";
-    btnAi.title = "Generate uraian pakai AI";
-    btnAi.addEventListener("click", function() {
-      var posisi = tr.querySelector("select").value;
-      generateUraian(posisi, uraianField, btnAi);
-    });
-    tdUraian.appendChild(btnAi);
-
-    var btn = document.createElement("button");
-    btn.textContent = "Hapus";
-    btn.className = "btn-delete";
-    btn.addEventListener("click", function() {
-      tr.remove();
-      if (!tableBody.children.length) addRow();
-    });
-
-    var btnDup = document.createElement("button");
-    btnDup.textContent = "Duplikat";
-    btnDup.className = "btn-dup";
-    btnDup.addEventListener("click", function() {
-      var cells = tr.querySelectorAll("td");
-      addRow({
-        date: cells[0].querySelector("input").value,
-        posisi: cells[1].querySelector("select").value,
-        dosen: cells[2].querySelector("input").value,
-        uraian: cells[3].querySelector("textarea").value
-      });
-    });
-
-    var actionsWrap = document.createElement("div");
-    actionsWrap.className = "row-actions";
-    actionsWrap.appendChild(btnDup);
-    actionsWrap.appendChild(btn);
-    tdActions.appendChild(actionsWrap);
-
-    tr.appendChild(tdDate);
-    tr.appendChild(tdPosisi);
-    tr.appendChild(tdDosen);
-    tr.appendChild(tdUraian);
-    tr.appendChild(tdActions);
-
-    tableBody.appendChild(tr);
-  }
-
-  function escapeCsv(value) {
-    var str = String(value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-    if (str.indexOf("\"") >= 0 || str.indexOf(",") >= 0 || str.indexOf("\n") >= 0) {
-      return "\"" + str.replace(/\"/g, "\"\"") + "\"";
-    }
-    return str;
-  }
-
-  function normalizeDate(value) {
-    var v = String(value || "").trim();
-    if (!v) return "";
-    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) {
-      var parts = v.split("-");
-      return parts[2] + "-" + parts[1] + "-" + parts[0];
-    }
-    if (/^\d{2}-\d{2}-\d{4}$/.test(v)) return v;
-    return v;
-  }
-
-  function collectRows() {
-    var rows = [];
-    var trs = tableBody.querySelectorAll("tr");
-    trs.forEach(function(tr) {
-      var cells = tr.querySelectorAll("td");
-      var date = normalizeDate(cells[0].querySelector("input").value);
-      var posisi = cells[1].querySelector("select").value.trim();
-      var dosen = cells[2].querySelector("input").value.trim();
-      var uraian = cells[3].querySelector("textarea").value.trim();
-
-      if (date || posisi || dosen || uraian) {
-        rows.push([date, posisi, dosen, uraian]);
-      }
-    });
-    return rows;
-  }
-
-  function downloadCsv() {
-    var rows = collectRows();
-    if (!rows.length) {
-      alert("Tidak ada data.");
-      return;
-    }
-
-    var csv = "tanggal,posisi,dosen,uraian\n" + rows
-      .map(function(r) { return r.map(escapeCsv).join(","); })
-      .join("\n");
-
-    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = "bimbingan.csv";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  addRowBtn.addEventListener("click", function() { addRow(); });
-  downloadBtn.addEventListener("click", downloadCsv);
-  clearBtn.addEventListener("click", function() {
-    tableBody.innerHTML = "";
-    addRow();
-  });
-
-  addRow();
-
-  // ── Daftar Dosen ──────────────────────────────────────────────────────────
+  // ── Data Dosen ─────────────────────────────────────────────────────────────
   var dosenData = [
     {id:"081251753882",name:"Ema Dwi Arsita, S.Ars., M.Ars."},
     {id:"08125247209",name:"Dimas Bintang Mudrajad, S.T., M.Si."},
@@ -344,32 +177,375 @@
     {id:"2309106013",name:"MUHAMMAD AFRIZAL KESUMA"}
   ];
 
-  var dosenListEl = document.getElementById("dosenList");
-  var dosenSearchEl = document.getElementById("dosenSearch");
-
-  function renderDosenList(filter) {
-    var query = (filter || "").toLowerCase();
-    var html = "";
-    var count = 0;
-    for (var i = 0; i < dosenData.length; i++) {
-      var d = dosenData[i];
-      if (query && d.name.toLowerCase().indexOf(query) < 0 && d.id.indexOf(query) < 0) continue;
-      html += '<div class="dosen-item"><span class="dosen-name">' + escapeHtml(d.name) + '</span><code class="dosen-nip">' + d.id + '</code></div>';
-      count++;
-    }
-    if (!count) html = '<p class="hint">Tidak ditemukan.</p>';
-    dosenListEl.innerHTML = html;
-  }
-
-  function escapeHtml(str) {
-    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
-
-  dosenSearchEl.addEventListener("input", function() {
-    renderDosenList(dosenSearchEl.value);
+  // Sorted copy untuk dropdown (alfabet)
+  var dosenSorted = dosenData.slice().sort(function(a, b) {
+    return a.name.localeCompare(b.name);
   });
 
-  renderDosenList("");
+  // ── DOM refs ─────────────────────────────────────────────────────────────
+  var tableBody = document.getElementById("tableBody");
+  var addRowBtn = document.getElementById("addRow");
+  var downloadBtn = document.getElementById("downloadCsv");
+  var clearBtn = document.getElementById("clearAll");
+
+  var pembimbing1 = document.getElementById("pembimbing1");
+  var pembimbing2 = document.getElementById("pembimbing2");
+  var pembimbing1Search = document.getElementById("pembimbing1Search");
+  var pembimbing2Search = document.getElementById("pembimbing2Search");
+
+  var STORAGE_KEY = "eta_csv_data";
+
+  // ── Helpers ─────────────────────────────────────────────────────────────
+  function escapeHtml(str) {
+    return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function dosenName(id) {
+    for (var i = 0; i < dosenData.length; i++) {
+      if (dosenData[i].id === id) return dosenData[i].name;
+    }
+    return "";
+  }
+
+  // ── Pembimbing dropdowns ─────────────────────────────────────────────────
+  function populatePembimbingSelect(selectEl, filter) {
+    var query = (filter || "").toLowerCase();
+    var prev = selectEl.value;
+    selectEl.innerHTML = "";
+
+    var empty = document.createElement("option");
+    empty.value = "";
+    empty.textContent = "— pilih dosen —";
+    selectEl.appendChild(empty);
+
+    dosenSorted.forEach(function(d) {
+      if (query && d.name.toLowerCase().indexOf(query) < 0 && d.id.indexOf(query) < 0) return;
+      var o = document.createElement("option");
+      o.value = d.id;
+      o.textContent = d.name + " (" + d.id + ")";
+      selectEl.appendChild(o);
+    });
+
+    // restore selection kalau masih ada
+    if (prev && selectEl.querySelector('option[value="' + prev + '"]')) {
+      selectEl.value = prev;
+    }
+  }
+
+  function refreshAllDosenSelects() {
+    var rows = tableBody.querySelectorAll("tr");
+    rows.forEach(function(tr) {
+      var sel = tr.querySelector(".dosen-select");
+      if (sel) updateDosenOptionLabels(sel);
+    });
+  }
+
+  function updateDosenOptionLabels(sel) {
+    var p1 = pembimbing1.value;
+    var p2 = pembimbing2.value;
+    var opts = sel.querySelectorAll("option");
+    opts.forEach(function(o) {
+      if (o.value === "P1") {
+        o.textContent = p1 ? "Pembimbing 1 — " + dosenName(p1) : "Pembimbing 1 (belum diset)";
+        o.disabled = !p1;
+      } else if (o.value === "P2") {
+        o.textContent = p2 ? "Pembimbing 2 — " + dosenName(p2) : "Pembimbing 2 (belum diset)";
+        o.disabled = !p2;
+      }
+    });
+  }
+
+  // ── Row creation ─────────────────────────────────────────────────────────
+  function createField(type, value, placeholder) {
+    var el;
+    if (type === "textarea") {
+      el = document.createElement("textarea");
+      el.value = value || "";
+      if (placeholder) el.placeholder = placeholder;
+      el.className = "field field-textarea";
+    } else {
+      el = document.createElement("input");
+      el.type = type;
+      el.value = value || "";
+      if (placeholder) el.placeholder = placeholder;
+      el.className = "field";
+    }
+    return el;
+  }
+
+  function createSelect(options, value) {
+    var el = document.createElement("select");
+    el.className = "field";
+    options.forEach(function(opt) {
+      var o = document.createElement("option");
+      o.value = opt.value;
+      o.textContent = opt.label;
+      el.appendChild(o);
+    });
+    if (value != null) el.value = value;
+    return el;
+  }
+
+  function makeIconBtn(symbol, title, className) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = symbol;
+    b.title = title;
+    b.setAttribute("aria-label", title);
+    b.className = className;
+    return b;
+  }
+
+  function addRow(data) {
+    data = data || {};
+    var tr = document.createElement("tr");
+
+    // # nomor
+    var tdNo = document.createElement("td");
+    tdNo.className = "table-cell cell-no";
+
+    // urut (up/down)
+    var tdOrder = document.createElement("td");
+    tdOrder.className = "table-cell cell-order";
+    var btnUp = makeIconBtn("▲", "Naikkan baris", "btn-order");
+    var btnDown = makeIconBtn("▼", "Turunkan baris", "btn-order");
+    btnUp.addEventListener("click", function() {
+      var prev = tr.previousElementSibling;
+      if (prev) { tableBody.insertBefore(tr, prev); afterChange(); }
+    });
+    btnDown.addEventListener("click", function() {
+      var next = tr.nextElementSibling;
+      if (next) { tableBody.insertBefore(next, tr); afterChange(); }
+    });
+    var orderWrap = document.createElement("div");
+    orderWrap.className = "order-wrap";
+    orderWrap.appendChild(btnUp);
+    orderWrap.appendChild(btnDown);
+    tdOrder.appendChild(orderWrap);
+
+    // tanggal
+    var tdDate = document.createElement("td");
+    tdDate.className = "table-cell";
+    var dateField = createField("date", data.date);
+    tdDate.appendChild(dateField);
+
+    // posisi
+    var tdPosisi = document.createElement("td");
+    tdPosisi.className = "table-cell";
+    var posisiSelect = createSelect([
+      { value: "Proposal", label: "Proposal" },
+      { value: "Hasil", label: "Hasil" },
+      { value: "Pendadaran", label: "Pendadaran" }
+    ], data.posisi || "Proposal");
+    tdPosisi.appendChild(posisiSelect);
+
+    // dosen (P1/P2)
+    var tdDosen = document.createElement("td");
+    tdDosen.className = "table-cell";
+    var dosenSelect = createSelect([
+      { value: "", label: "— pilih —" },
+      { value: "P1", label: "Pembimbing 1" },
+      { value: "P2", label: "Pembimbing 2" }
+    ], data.dosenSlot || "");
+    dosenSelect.className = "field dosen-select";
+    updateDosenOptionLabels(dosenSelect);
+    tdDosen.appendChild(dosenSelect);
+
+    // uraian + AI
+    var tdUraian = document.createElement("td");
+    tdUraian.className = "table-cell";
+    var uraianWrap = document.createElement("div");
+    uraianWrap.className = "uraian-wrap";
+    var uraianField = createField("textarea", data.uraian, "Isi bimbingan");
+    var btnAi = makeIconBtn("✨", "Generate uraian pakai AI", "btn-ai");
+    btnAi.addEventListener("click", function() {
+      generateUraian(posisiSelect.value, uraianField, btnAi);
+    });
+    uraianWrap.appendChild(uraianField);
+    uraianWrap.appendChild(btnAi);
+    tdUraian.appendChild(uraianWrap);
+
+    // aksi (duplikat, hapus)
+    var tdActions = document.createElement("td");
+    tdActions.className = "table-cell";
+    var btnDup = makeIconBtn("⧉", "Duplikat baris", "btn-dup");
+    btnDup.addEventListener("click", function() {
+      var clone = {
+        date: dateField.value,
+        posisi: posisiSelect.value,
+        dosenSlot: dosenSelect.value,
+        uraian: uraianField.value
+      };
+      var newTr = buildRowAfter(tr, clone);
+      afterChange();
+    });
+    var btnDel = makeIconBtn("🗑", "Hapus baris", "btn-delete");
+    btnDel.addEventListener("click", function() {
+      tr.remove();
+      if (!tableBody.children.length) addRow();
+      afterChange();
+    });
+    var actionsWrap = document.createElement("div");
+    actionsWrap.className = "row-actions";
+    actionsWrap.appendChild(btnDup);
+    actionsWrap.appendChild(btnDel);
+    tdActions.appendChild(actionsWrap);
+
+    tr.appendChild(tdNo);
+    tr.appendChild(tdOrder);
+    tr.appendChild(tdDate);
+    tr.appendChild(tdPosisi);
+    tr.appendChild(tdDosen);
+    tr.appendChild(tdUraian);
+    tr.appendChild(tdActions);
+
+    // autosave on any change
+    [dateField, posisiSelect, dosenSelect, uraianField].forEach(function(el) {
+      el.addEventListener("change", afterChange);
+      el.addEventListener("input", afterChange);
+    });
+
+    tableBody.appendChild(tr);
+    renumber();
+    return tr;
+  }
+
+  function buildRowAfter(refTr, data) {
+    var newTr = addRow(data);
+    // pindahkan tepat setelah refTr
+    tableBody.insertBefore(newTr, refTr.nextElementSibling);
+    renumber();
+    return newTr;
+  }
+
+  function renumber() {
+    var rows = tableBody.querySelectorAll("tr");
+    rows.forEach(function(tr, i) {
+      var cell = tr.querySelector(".cell-no");
+      if (cell) cell.textContent = (i + 1);
+    });
+  }
+
+  // ── Collect & CSV ─────────────────────────────────────────────────────────
+  function resolveDosen(slot) {
+    if (slot === "P1") return pembimbing1.value || "";
+    if (slot === "P2") return pembimbing2.value || "";
+    return "";
+  }
+
+  function normalizeDate(value) {
+    var v = String(value || "").trim();
+    if (!v) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v)) {
+      var parts = v.split("-");
+      return parts[2] + "-" + parts[1] + "-" + parts[0];
+    }
+    if (/^\d{2}-\d{2}-\d{4}$/.test(v)) return v;
+    return v;
+  }
+
+  function escapeCsv(value) {
+    var str = String(value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    if (str.indexOf("\"") >= 0 || str.indexOf(",") >= 0 || str.indexOf("\n") >= 0) {
+      return "\"" + str.replace(/\"/g, "\"\"") + "\"";
+    }
+    return str;
+  }
+
+  function getRowData(tr) {
+    return {
+      date: tr.querySelector('input[type="date"]').value,
+      posisi: tr.querySelectorAll("select")[0].value,
+      dosenSlot: tr.querySelector(".dosen-select").value,
+      uraian: tr.querySelector("textarea").value
+    };
+  }
+
+  function collectRows() {
+    var rows = [];
+    var trs = tableBody.querySelectorAll("tr");
+    trs.forEach(function(tr) {
+      var d = getRowData(tr);
+      var date = normalizeDate(d.date);
+      var dosen = resolveDosen(d.dosenSlot);
+      var uraian = (d.uraian || "").trim();
+      if (date || dosen || uraian) {
+        rows.push([date, d.posisi, dosen, uraian]);
+      }
+    });
+    return rows;
+  }
+
+  function downloadCsv() {
+    if (!pembimbing1.value && !pembimbing2.value) {
+      alert("Pilih dosen pembimbing dulu di bagian atas.");
+      return;
+    }
+    var rows = collectRows();
+    if (!rows.length) {
+      alert("Tidak ada data.");
+      return;
+    }
+    // Validasi: ada baris yang belum pilih dosen?
+    var missing = rows.some(function(r) { return !r[2]; });
+    if (missing) {
+      if (!confirm("Ada baris yang belum pilih dosen. Tetap unduh?")) return;
+    }
+
+    var csv = "tanggal,posisi,dosen,uraian\n" + rows
+      .map(function(r) { return r.map(escapeCsv).join(","); })
+      .join("\n");
+
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "bimbingan.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Autosave ke localStorage ──────────────────────────────────────────────
+  function afterChange() {
+    renumber();
+    saveState();
+  }
+
+  function saveState() {
+    try {
+      var state = {
+        p1: pembimbing1.value,
+        p2: pembimbing2.value,
+        rows: []
+      };
+      tableBody.querySelectorAll("tr").forEach(function(tr) {
+        state.rows.push(getRowData(tr));
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      var state = JSON.parse(raw);
+      if (state.p1) pembimbing1.value = state.p1;
+      if (state.p2) pembimbing2.value = state.p2;
+      tableBody.innerHTML = "";
+      if (state.rows && state.rows.length) {
+        state.rows.forEach(function(r) { addRow(r); });
+      } else {
+        addRow();
+      }
+      refreshAllDosenSelects();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   // ── AI Generate Uraian ────────────────────────────────────────────────────
   var AI_API_URL = "https://api.siputzx.my.id/api/ai/deepseekr1";
@@ -403,7 +579,6 @@
       })
       .then(function(data) {
         var text = "";
-        // Response format: { status: true, data: { response: "..." } }
         if (data && data.data && data.data.response) {
           text = data.data.response;
         } else if (data && data.data && typeof data.data === "string") {
@@ -414,19 +589,15 @@
           text = data.message;
         }
 
-        // Cleanup
         text = String(text || "").trim();
-        // Remove think tags
         text = text.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
-        // Remove quotes
         text = text.replace(/^["'`]+|["'`]+$/g, "").trim();
-        // Remove numbering like "1. " or "- "
         text = text.replace(/^\d+\.\s*/, "").replace(/^[-•]\s*/, "").trim();
-        // Take first line only
         text = text.split("\n")[0].trim();
 
         if (text) {
           textareaEl.value = text;
+          afterChange();
         } else {
           alert("AI tidak mengembalikan hasil. Coba lagi.");
         }
@@ -438,5 +609,61 @@
         btnEl.disabled = false;
         btnEl.textContent = "✨";
       });
+  }
+
+  // ── Daftar Dosen (referensi) ──────────────────────────────────────────────
+  var dosenListEl = document.getElementById("dosenList");
+  var dosenSearchEl = document.getElementById("dosenSearch");
+
+  function renderDosenList(filter) {
+    var query = (filter || "").toLowerCase();
+    var html = "";
+    var count = 0;
+    for (var i = 0; i < dosenSorted.length; i++) {
+      var d = dosenSorted[i];
+      if (query && d.name.toLowerCase().indexOf(query) < 0 && d.id.indexOf(query) < 0) continue;
+      html += '<div class="dosen-item"><span class="dosen-name">' + escapeHtml(d.name) + '</span><code class="dosen-nip">' + d.id + '</code></div>';
+      count++;
+    }
+    if (!count) html = '<p class="hint">Tidak ditemukan.</p>';
+    dosenListEl.innerHTML = html;
+  }
+
+  // ── Event wiring ──────────────────────────────────────────────────────────
+  addRowBtn.addEventListener("click", function() { addRow(); afterChange(); });
+  downloadBtn.addEventListener("click", downloadCsv);
+  clearBtn.addEventListener("click", function() {
+    if (!confirm("Reset semua baris? Data pembimbing tetap tersimpan.")) return;
+    tableBody.innerHTML = "";
+    addRow();
+    afterChange();
+  });
+
+  pembimbing1Search.addEventListener("input", function() {
+    populatePembimbingSelect(pembimbing1, pembimbing1Search.value);
+  });
+  pembimbing2Search.addEventListener("input", function() {
+    populatePembimbingSelect(pembimbing2, pembimbing2Search.value);
+  });
+  pembimbing1.addEventListener("change", function() {
+    refreshAllDosenSelects();
+    saveState();
+  });
+  pembimbing2.addEventListener("change", function() {
+    refreshAllDosenSelects();
+    saveState();
+  });
+
+  dosenSearchEl.addEventListener("input", function() {
+    renderDosenList(dosenSearchEl.value);
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  populatePembimbingSelect(pembimbing1, "");
+  populatePembimbingSelect(pembimbing2, "");
+  renderDosenList("");
+
+  if (!loadState()) {
+    addRow();
   }
 })();

@@ -10,14 +10,34 @@
     <main class="container">
       <header class="hero">
         <p class="eyebrow">E-TA FT UNMUL</p>
-        <h1 class="hero-title">Generate</h1>
-        <p class="hero-sub">Isi baris, lalu unduh CSV untuk dipakai di extension.</p>
+        <h1 class="hero-title">Generator CSV Bimbingan</h1>
+        <p class="hero-sub">Isi baris bimbingan, lalu unduh CSV untuk dipakai di extension.</p>
       </header>
 
+      <!-- Pengaturan Pembimbing -->
       <section class="panel">
+        <h2 class="section-title">1. Pilih Dosen Pembimbing</h2>
+        <p class="hint" style="margin:0 0 16px">Set dosen pembimbing kamu di sini. Nanti tinggal pilih P1 / P2 di tiap baris.</p>
+        <div class="pembimbing-grid">
+          <div class="pembimbing-field">
+            <label class="label" for="pembimbing1">Pembimbing 1</label>
+            <input type="text" id="pembimbing1Search" class="field" placeholder="Cari nama / NIP..." autocomplete="off" />
+            <select id="pembimbing1" class="field" size="1"></select>
+          </div>
+          <div class="pembimbing-field">
+            <label class="label" for="pembimbing2">Pembimbing 2</label>
+            <input type="text" id="pembimbing2Search" class="field" placeholder="Cari nama / NIP..." autocomplete="off" />
+            <select id="pembimbing2" class="field" size="1"></select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tabel Bimbingan -->
+      <section class="panel">
+        <h2 class="section-title">2. Isi Data Bimbingan</h2>
         <div class="toolbar">
-          <button id="addRow" class="btn btn-secondary">Tambah Baris</button>
-          <button id="downloadCsv" class="btn btn-primary">Unduh CSV</button>
+          <button id="addRow" class="btn btn-secondary">+ Tambah Baris</button>
+          <button id="downloadCsv" class="btn btn-primary">⬇ Unduh CSV</button>
           <button id="clearAll" class="btn btn-secondary">Reset</button>
         </div>
 
@@ -25,36 +45,40 @@
           <table id="dataTable" class="table">
             <thead>
               <tr>
-                <th class="table-head">Tanggal</th>
-                <th class="table-head">Posisi</th>
-                <th class="table-head">Dosen</th>
-                <th class="table-head">Uraian</th>
-                <th class="table-head"></th>
+                <th class="table-head th-no">#</th>
+                <th class="table-head th-order">Urut</th>
+                <th class="table-head th-date">Tanggal</th>
+                <th class="table-head th-posisi">Posisi</th>
+                <th class="table-head th-dosen">Dosen</th>
+                <th class="table-head th-uraian">Uraian</th>
+                <th class="table-head th-aksi">Aksi</th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
           </table>
         </div>
 
-        <p class="hint">Tanggal auto jadi DD-MM-YYYY saat export. Dosen bisa pakai NIP atau nama lengkap/partial.</p>
+        <p class="hint">Tanggal auto jadi DD-MM-YYYY saat export. Tombol ✨ buat generate uraian otomatis pakai AI.</p>
       </section>
 
-      <!-- AI Config -->
+      <!-- AI Info -->
       <section class="panel" id="aiPanel">
         <h2 class="section-title">✨ AI Uraian</h2>
-        <p class="hint" style="margin:0 0 8px">Klik tombol ✨ di kolom uraian buat generate otomatis. Gratis, ga perlu API key.</p>
+        <p class="hint" style="margin:0">Klik tombol ✨ di kolom uraian buat generate otomatis. Gratis, ga perlu API key. (Agak lambat ~10 detik, sabar ya.)</p>
       </section>
 
+      <!-- Format CSV -->
       <section class="panel">
         <h2 class="section-title">Format CSV</h2>
         <pre class="code-block">tanggal,posisi,dosen,uraian
 05-06-2026,Proposal,198209012009122003,Revisi BAB 1
 06-06-2026,Hasil,199107272023211025,Diskusi metodologi</pre>
-        <p class="hint">Kolom dosen diisi value/NIP dari daftar di bawah. Extension akan match otomatis.</p>
+        <p class="hint">Kolom dosen otomatis terisi NIP dari pembimbing yang kamu pilih.</p>
       </section>
 
+      <!-- Daftar Dosen -->
       <section class="panel">
-        <h2 class="section-title">Daftar Dosen</h2>
+        <h2 class="section-title">Daftar Dosen (Referensi)</h2>
         <label class="label" for="dosenSearch">Cari dosen:</label>
         <input id="dosenSearch" type="text" class="field" placeholder="Ketik nama atau NIP..." style="margin-bottom:12px" />
         <div class="dosen-list" id="dosenList"></div>
