@@ -565,17 +565,276 @@
   function updateDosenOptionLabels(sel) {
     var p1 = pembimbing1.value;
     var p2 = pembimbing2.value;
-    var opts = sel.querySelectorAll("option");
-    opts.forEach(function(o) {
-      if (o.value === "P1") {
-        o.textContent = p1 ? "Pembimbing 1 — " + dosenName(p1) : "Pembimbing 1 (belum diset)";
-        o.disabled = !p1;
-      } else if (o.value === "P2") {
-        o.textContent = p2 ? "Pembimbing 2 — " + dosenName(p2) : "Pembimbing 2 (belum diset)";
-        o.disabled = !p2;
+
+    if (sel && typeof sel.updateOptions === "function") {
+      var newOptions = [
+        { value: "", label: "— pilih —" },
+        { value: "P1", label: p1 ? "Pembimbing 1 — " + dosenName(p1) : "Pembimbing 1 (belum diset)", disabled: !p1 },
+        { value: "P2", label: p2 ? "Pembimbing 2 — " + dosenName(p2) : "Pembimbing 2 (belum diset)", disabled: !p2 }
+      ];
+      sel.updateOptions(newOptions);
+      return;
+    }
+
+    if (sel && sel.querySelectorAll) {
+      var opts = sel.querySelectorAll("option");
+      opts.forEach(function(o) {
+        if (o.value === "P1") {
+          o.textContent = p1 ? "Pembimbing 1 — " + dosenName(p1) : "Pembimbing 1 (belum diset)";
+          o.disabled = !p1;
+        } else if (o.value === "P2") {
+          o.textContent = p2 ? "Pembimbing 2 — " + dosenName(p2) : "Pembimbing 2 (belum diset)";
+          o.disabled = !p2;
+        }
+      });
+    }
+  }
+
+  function positionPopoverFixed(triggerEl, popoverEl) {
+    popoverEl.style.position = "fixed";
+    popoverEl.style.zIndex = "10000";
+
+    var rect = triggerEl.getBoundingClientRect();
+    var popWidth = popoverEl.classList.contains("custom-datepicker-popover") ? 270 : Math.max(rect.width, 160);
+    popoverEl.style.width = popWidth + "px";
+
+    var popHeight = popoverEl.offsetHeight || 220;
+    var vh = window.innerHeight;
+    var vw = window.innerWidth;
+
+    var top = rect.bottom + 6;
+    if (top + popHeight > vh - 10) {
+      top = rect.top - popHeight - 6;
+    }
+
+    var left = rect.left;
+    if (left + popWidth > vw - 10) {
+      left = vw - popWidth - 10;
+    }
+    if (left < 10) left = 10;
+
+    popoverEl.style.top = Math.round(top) + "px";
+    popoverEl.style.left = Math.round(left) + "px";
+  }
+
+  // ── Custom Dropdown Select Component ──────────────────────────────────────
+  function createCustomSelect(options, initialValue, onChangeCallback) {
+    var wrapper = document.createElement("div");
+    wrapper.className = "custom-select";
+
+    var selectedValue = initialValue != null ? initialValue : (options[0] ? options[0].value : "");
+
+    function getLabel(val) {
+      for (var i = 0; i < options.length; i++) {
+        if (options[i].value === val) return options[i].label;
+      }
+      return val || "Pilih";
+    }
+
+    var trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "custom-select-trigger";
+    trigger.innerHTML = '<span class="custom-select-label">' + escapeHtml(getLabel(selectedValue)) + '</span>' +
+                        '<span class="custom-select-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>';
+
+    var dropdown = document.createElement("div");
+    dropdown.className = "custom-select-dropdown";
+    document.body.appendChild(dropdown);
+
+    function renderDropdownOptions() {
+      dropdown.innerHTML = "";
+      options.forEach(function(opt) {
+        var optEl = document.createElement("div");
+        optEl.className = "custom-select-option" + (opt.value === selectedValue ? " selected" : "") + (opt.disabled ? " disabled" : "");
+        optEl.innerHTML = '<span>' + escapeHtml(opt.label) + '</span>' +
+                          (opt.value === selectedValue ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' : '');
+        if (!opt.disabled) {
+          optEl.addEventListener("click", function(e) {
+            e.stopPropagation();
+            selectedValue = opt.value;
+            trigger.querySelector(".custom-select-label").textContent = opt.label;
+            wrapper.classList.remove("active");
+            dropdown.classList.remove("active");
+            renderDropdownOptions();
+            if (typeof onChangeCallback === "function") onChangeCallback(selectedValue);
+          });
+        }
+        dropdown.appendChild(optEl);
+      });
+    }
+
+    renderDropdownOptions();
+
+    trigger.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var isActive = wrapper.classList.contains("active");
+      closeAllPopovers();
+      if (!isActive) {
+        wrapper.classList.add("active");
+        dropdown.classList.add("active");
+        positionPopoverFixed(trigger, dropdown);
       }
     });
+
+    wrapper.appendChild(trigger);
+
+    Object.defineProperty(wrapper, "value", {
+      get: function() { return selectedValue; },
+      set: function(val) {
+        selectedValue = val;
+        trigger.querySelector(".custom-select-label").textContent = getLabel(val);
+        renderDropdownOptions();
+      }
+    });
+
+    wrapper.updateOptions = function(newOptions) {
+      options = newOptions;
+      trigger.querySelector(".custom-select-label").textContent = getLabel(selectedValue);
+      renderDropdownOptions();
+    };
+
+    return wrapper;
   }
+
+  // ── Custom Modern Datepicker Popover ──────────────────────────────────────
+  function createCustomDatePicker(initialDate, onChangeCallback) {
+    var wrapper = document.createElement("div");
+    wrapper.className = "custom-datepicker";
+
+    var currentDateVal = initialDate || "";
+
+    function formatDisplayDate(val) {
+      if (!val) return "dd/mm/yyyy";
+      var parts = val.split("-");
+      if (parts.length === 3) {
+        return parts[2] + "-" + parts[1] + "-" + parts[0];
+      }
+      return val;
+    }
+
+    var trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "custom-datepicker-trigger";
+    trigger.innerHTML = '<span class="dp-label">' + escapeHtml(formatDisplayDate(currentDateVal)) + '</span>' +
+                        '<span class="custom-datepicker-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>';
+
+    var popover = document.createElement("div");
+    popover.className = "custom-datepicker-popover";
+    document.body.appendChild(popover);
+
+    var viewDate = new Date();
+    if (currentDateVal) {
+      var p = currentDateVal.split("-");
+      if (p.length === 3) viewDate = new Date(parseInt(p[0]), parseInt(p[1]) - 1, parseInt(p[2]));
+    }
+
+    var monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    function renderCalendar() {
+      popover.innerHTML = "";
+      var year = viewDate.getFullYear();
+      var month = viewDate.getMonth();
+
+      var header = document.createElement("div");
+      header.className = "dp-header";
+      header.innerHTML = '<button type="button" class="dp-nav-btn dp-prev">‹</button>' +
+                         '<span class="dp-title">' + monthNames[month] + ' ' + year + '</span>' +
+                         '<button type="button" class="dp-nav-btn dp-next">›</button>';
+
+      header.querySelector(".dp-prev").addEventListener("click", function(e) {
+        e.stopPropagation();
+        viewDate.setMonth(viewDate.getMonth() - 1);
+        renderCalendar();
+      });
+
+      header.querySelector(".dp-next").addEventListener("click", function(e) {
+        e.stopPropagation();
+        viewDate.setMonth(viewDate.getMonth() + 1);
+        renderCalendar();
+      });
+
+      var weekdays = document.createElement("div");
+      weekdays.className = "dp-weekdays";
+      weekdays.innerHTML = '<span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>';
+
+      var daysGrid = document.createElement("div");
+      daysGrid.className = "dp-days-grid";
+
+      var firstDay = new Date(year, month, 1).getDay();
+      var daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      var today = new Date();
+      var todayStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+
+      for (var i = 0; i < firstDay; i++) {
+        var empty = document.createElement("div");
+        empty.className = "dp-day empty";
+        daysGrid.appendChild(empty);
+      }
+
+      for (var day = 1; day <= daysInMonth; day++) {
+        (function(dNum) {
+          var dateStr = year + "-" + String(month + 1).padStart(2, "0") + "-" + String(dNum).padStart(2, "0");
+          var dayEl = document.createElement("div");
+          dayEl.className = "dp-day";
+          if (dateStr === currentDateVal) dayEl.classList.add("selected");
+          if (dateStr === todayStr) dayEl.classList.add("today");
+          dayEl.textContent = dNum;
+
+          dayEl.addEventListener("click", function(e) {
+            e.stopPropagation();
+            currentDateVal = dateStr;
+            trigger.querySelector(".dp-label").textContent = formatDisplayDate(currentDateVal);
+            wrapper.classList.remove("active");
+            popover.classList.remove("active");
+            if (typeof onChangeCallback === "function") onChangeCallback(currentDateVal);
+          });
+
+          daysGrid.appendChild(dayEl);
+        })(day);
+      }
+
+      popover.appendChild(header);
+      popover.appendChild(weekdays);
+      popover.appendChild(daysGrid);
+    }
+
+    renderCalendar();
+
+    trigger.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var isActive = wrapper.classList.contains("active");
+      closeAllPopovers();
+      if (!isActive) {
+        wrapper.classList.add("active");
+        popover.classList.add("active");
+        positionPopoverFixed(trigger, popover);
+      }
+    });
+
+    wrapper.appendChild(trigger);
+
+    Object.defineProperty(wrapper, "value", {
+      get: function() { return currentDateVal; },
+      set: function(val) {
+        currentDateVal = val || "";
+        trigger.querySelector(".dp-label").textContent = formatDisplayDate(currentDateVal);
+        renderCalendar();
+      }
+    });
+
+    return wrapper;
+  }
+
+  function closeAllPopovers() {
+    document.querySelectorAll(".custom-select.active, .custom-datepicker.active, .custom-select-dropdown.active, .custom-datepicker-popover.active").forEach(function(el) {
+      el.classList.remove("active");
+    });
+  }
+
+  document.addEventListener("click", function() {
+    closeAllPopovers();
+  });
 
   // ── Row creation ─────────────────────────────────────────────────────────
   function createField(type, value, placeholder) {
@@ -596,16 +855,7 @@
   }
 
   function createSelect(options, value) {
-    var el = document.createElement("select");
-    el.className = "field";
-    options.forEach(function(opt) {
-      var o = document.createElement("option");
-      o.value = opt.value;
-      o.textContent = opt.label;
-      el.appendChild(o);
-    });
-    if (value != null) el.value = value;
-    return el;
+    return createCustomSelect(options, value);
   }
 
   // ── SVG Icon Map ────────────────────────────────────────────────────────
@@ -659,28 +909,28 @@
     // tanggal
     var tdDate = document.createElement("td");
     tdDate.className = "table-cell";
-    var dateField = createField("date", data.date);
+    var dateField = createCustomDatePicker(data.date, afterChange);
     tdDate.appendChild(dateField);
 
     // posisi
     var tdPosisi = document.createElement("td");
     tdPosisi.className = "table-cell";
-    var posisiSelect = createSelect([
+    var posisiSelect = createCustomSelect([
       { value: "Proposal", label: "Proposal" },
       { value: "Hasil", label: "Hasil" },
       { value: "Pendadaran", label: "Pendadaran" }
-    ], data.posisi || "Proposal");
+    ], data.posisi || "Proposal", afterChange);
     tdPosisi.appendChild(posisiSelect);
 
     // dosen (P1/P2)
     var tdDosen = document.createElement("td");
     tdDosen.className = "table-cell";
-    var dosenSelect = createSelect([
+    var dosenSelect = createCustomSelect([
       { value: "", label: "— pilih —" },
       { value: "P1", label: "Pembimbing 1" },
       { value: "P2", label: "Pembimbing 2" }
-    ], data.dosenSlot || "");
-    dosenSelect.className = "field dosen-select";
+    ], data.dosenSlot || "", afterChange);
+    dosenSelect.className = "custom-select dosen-select";
     updateDosenOptionLabels(dosenSelect);
     tdDosen.appendChild(dosenSelect);
 
