@@ -569,8 +569,8 @@
     if (sel && typeof sel.updateOptions === "function") {
       var newOptions = [
         { value: "", label: "— pilih —" },
-        { value: "P1", label: p1 ? "Pembimbing 1 — " + dosenName(p1) : "Pembimbing 1 (belum diset)", disabled: !p1 },
-        { value: "P2", label: p2 ? "Pembimbing 2 — " + dosenName(p2) : "Pembimbing 2 (belum diset)", disabled: !p2 }
+        { value: "P1", label: p1 ? "P1 — " + dosenName(p1) : "P1 (belum diset)", disabled: !p1 },
+        { value: "P2", label: p2 ? "P2 — " + dosenName(p2) : "P2 (belum diset)", disabled: !p2 }
       ];
       sel.updateOptions(newOptions);
       return;
@@ -580,10 +580,10 @@
       var opts = sel.querySelectorAll("option");
       opts.forEach(function(o) {
         if (o.value === "P1") {
-          o.textContent = p1 ? "Pembimbing 1 — " + dosenName(p1) : "Pembimbing 1 (belum diset)";
+          o.textContent = p1 ? "P1 — " + dosenName(p1) : "P1 (belum diset)";
           o.disabled = !p1;
         } else if (o.value === "P2") {
-          o.textContent = p2 ? "Pembimbing 2 — " + dosenName(p2) : "Pembimbing 2 (belum diset)";
+          o.textContent = p2 ? "P2 — " + dosenName(p2) : "P2 (belum diset)";
           o.disabled = !p2;
         }
       });
