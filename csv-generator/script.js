@@ -18,6 +18,46 @@
     }
   }
 
+  // ── Custom Toast Notification System ─────────────────────────────────────
+  var toastContainer = null;
+
+  function showToast(message, type, duration) {
+    type = type || "info";
+    duration = duration || 3200;
+
+    if (!toastContainer) {
+      toastContainer = document.getElementById("toastContainer");
+      if (!toastContainer) {
+        toastContainer = document.createElement("div");
+        toastContainer.id = "toastContainer";
+        toastContainer.className = "toast-container";
+        document.body.appendChild(toastContainer);
+      }
+    }
+
+    var toast = document.createElement("div");
+    toast.className = "toast-card toast-" + type;
+
+    var iconMap = {
+      info: 'ℹ️',
+      success: '✓',
+      warning: '⚠️',
+      danger: '✕'
+    };
+
+    toast.innerHTML = '<span class="toast-icon">' + (iconMap[type] || 'ℹ️') + '</span>'
+                    + '<span class="toast-msg">' + escapeHtml(message) + '</span>';
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(function() {
+      toast.classList.add("toast-hiding");
+      setTimeout(function() {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 300);
+    }, duration);
+  }
+
   // ── Web Audio API Synth & Custom MP3 Sound Engine ─────────────────────────
   var audioCtx = null;
   var SOUND_STORAGE_KEY = "eta_custom_sound_config";
@@ -774,12 +814,12 @@
 
   function handleDownloadCsv() {
     if (!pembimbing1.value && !pembimbing2.value) {
-      alert("Pilih dosen pembimbing dulu di bagian atas.");
+      showToast("Pilih dosen pembimbing dulu di bagian atas.", "warning");
       return;
     }
     var rows = collectRows();
     if (!rows.length) {
-      alert("Tidak ada data.");
+      showToast("Tidak ada data bimbingan untuk diunduh.", "warning");
       return;
     }
     var missing = rows.some(function(r) { return !r[2]; });
@@ -905,12 +945,13 @@
         if (text) {
           textareaEl.value = text;
           afterChange();
+          showToast("Uraian bimbingan berhasil di-generate!", "success");
         } else {
-          alert("AI tidak mengembalikan hasil. Coba lagi.");
+          showToast("AI tidak mengembalikan hasil. Coba lagi.", "danger");
         }
       })
       .catch(function(err) {
-        alert("Gagal generate: " + err.message);
+        showToast("Gagal generate: " + err.message, "danger");
       })
       .finally(function() {
         btnEl.disabled = false;
@@ -1085,7 +1126,7 @@
       customSoundConfig.delUrl = soundDelUrlInput ? soundDelUrlInput.value.trim() : "";
       saveSoundConfigToStorage();
       playSound.add();
-      alert("✓ Custom sound berhasil disimpan!");
+      showToast("Custom sound berhasil disimpan!", "success");
       if (soundModalOverlay) soundModalOverlay.classList.add("hidden");
     });
   }
@@ -1104,7 +1145,7 @@
       customSoundConfig = { preset: "default", addUrl: "", dupUrl: "", delUrl: "" };
       saveSoundConfigToStorage();
       syncSoundPanelInputs();
-      alert("Custom sound di-reset ke Default Synth.");
+      showToast("Custom sound di-reset ke Default Synth.", "info");
     });
   }
 
