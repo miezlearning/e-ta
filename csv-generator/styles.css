@@ -140,49 +140,60 @@ body.page {
   justify-content: center;
   gap: 8px;
   border: 1px solid var(--hairline-strong);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--ink);
-  padding: 8px 16px;
+  padding: 0 16px;
   height: 40px;
   border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13.5px;
+  font-weight: 600;
   font-family: var(--font-sans);
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+  user-select: none;
+}
+
+.btn-icon {
+  flex-shrink: 0;
 }
 
 .btn:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: var(--body);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
 .btn.btn-primary {
   background: var(--primary);
   color: #ffffff;
-  border: 1px solid transparent;
-  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .btn.btn-primary:hover {
-  background: var(--primary-hover);
+  background: #f97316;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .btn-danger {
-  background: rgba(239, 68, 68, 0.08);
+  background: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.25);
   color: #f87171;
 }
 
 .btn-danger:hover {
-  background: rgba(239, 68, 68, 0.16);
+  background: #ef4444;
   border-color: #ef4444;
   color: #ffffff;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 /* ── Inputs & Fields ─────────────────────────────────────────────────────── */
@@ -380,40 +391,56 @@ tr:hover .table-cell {
 
 .btn-order {
   width: 28px;
-  height: 24px;
+  height: 22px;
   border: 1px solid var(--hairline-strong);
   border-radius: 4px;
-  background: transparent;
-  color: var(--body);
-  font-size: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
   cursor: pointer;
-  line-height: 1;
-  transition: all 0.12s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .btn-order:hover {
-  border-color: var(--body);
+  border-color: rgba(255, 255, 255, 0.3);
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-order:active {
+  transform: scale(0.92);
 }
 
 .btn-ai {
-  border: 1px solid var(--hairline-strong);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--ink);
-  border-radius: var(--radius-sm);
-  padding: 6px 10px;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.08);
+  color: #818cf8;
+  border-radius: var(--radius-md);
+  padding: 0 12px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
   height: 44px;
   white-space: nowrap;
 }
 
 .btn-ai:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--body);
+  background: rgba(99, 102, 241, 0.18);
+  border-color: #818cf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.btn-ai:active {
+  transform: translateY(0) scale(0.97);
 }
 
 .uraian-wrap {
@@ -422,38 +449,43 @@ tr:hover .table-cell {
   align-items: flex-start;
 }
 
-.actions-wrap {
+.row-actions, .actions-wrap {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   justify-content: center;
   align-items: center;
 }
 
-.btn-dup, .btn-del {
-  width: 32px;
-  height: 32px;
+.btn-dup, .btn-delete {
+  width: 34px;
+  height: 34px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--hairline-strong);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.03);
   color: var(--body);
-  font-size: 13px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.12s;
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .btn-dup:hover {
-  border-color: var(--body);
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(59, 130, 246, 0.5);
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.12);
+  transform: translateY(-1px);
 }
 
-.btn-del:hover {
+.btn-dup:active, .btn-delete:active {
+  transform: translateY(0) scale(0.92);
+}
+
+.btn-delete:hover {
   border-color: rgba(239, 68, 68, 0.5);
   color: #f87171;
-  background: rgba(239, 68, 68, 0.12);
+  background: rgba(239, 68, 68, 0.15);
+  transform: translateY(-1px);
 }
 
 .code-block {

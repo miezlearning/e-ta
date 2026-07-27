@@ -370,10 +370,19 @@
     return el;
   }
 
-  function makeIconBtn(symbol, title, className) {
+  // ── SVG Icon Map ────────────────────────────────────────────────────────
+  var SVG_ICONS = {
+    up: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>',
+    down: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>',
+    ai: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg> ✨',
+    dup: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
+    del: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>'
+  };
+
+  function makeIconBtn(svgKey, title, className) {
     var b = document.createElement("button");
     b.type = "button";
-    b.textContent = symbol;
+    b.innerHTML = SVG_ICONS[svgKey] || svgKey;
     b.title = title;
     b.setAttribute("aria-label", title);
     b.className = className;
@@ -391,8 +400,8 @@
     // urut (up/down)
     var tdOrder = document.createElement("td");
     tdOrder.className = "table-cell cell-order";
-    var btnUp = makeIconBtn("▲", "Naikkan baris", "btn-order");
-    var btnDown = makeIconBtn("▼", "Turunkan baris", "btn-order");
+    var btnUp = makeIconBtn("up", "Naikkan baris", "btn-order");
+    var btnDown = makeIconBtn("down", "Turunkan baris", "btn-order");
     btnUp.addEventListener("click", function() {
       var prev = tr.previousElementSibling;
       if (prev) { tableBody.insertBefore(tr, prev); afterChange(); }
@@ -441,7 +450,7 @@
     var uraianWrap = document.createElement("div");
     uraianWrap.className = "uraian-wrap";
     var uraianField = createField("textarea", data.uraian, "Isi bimbingan");
-    var btnAi = makeIconBtn("✨", "Generate uraian pakai AI", "btn-ai");
+    var btnAi = makeIconBtn("ai", "Generate uraian otomatis dengan AI", "btn-ai");
     btnAi.addEventListener("click", function() {
       generateUraian(posisiSelect.value, uraianField, btnAi);
     });
@@ -452,7 +461,7 @@
     // aksi (duplikat, hapus)
     var tdActions = document.createElement("td");
     tdActions.className = "table-cell";
-    var btnDup = makeIconBtn("⧉", "Duplikat baris", "btn-dup");
+    var btnDup = makeIconBtn("dup", "Duplikat baris ini", "btn-dup");
     btnDup.addEventListener("click", function() {
       var clone = {
         date: dateField.value,
@@ -463,7 +472,7 @@
       var newTr = buildRowAfter(tr, clone);
       afterChange();
     });
-    var btnDel = makeIconBtn("🗑", "Hapus baris", "btn-delete");
+    var btnDel = makeIconBtn("del", "Hapus baris ini", "btn-delete");
     btnDel.addEventListener("click", function() {
       tr.remove();
       if (!tableBody.children.length) addRow();

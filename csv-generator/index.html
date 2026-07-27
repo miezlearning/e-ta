@@ -20,10 +20,12 @@
         <p class="hero-sub">Isi baris bimbingan, lalu unduh CSV untuk dipakai di Chrome extension.</p>
         <div class="hero-actions">
           <a href="extension.zip" download class="btn btn-primary">
-            🧩 Download Extension (.zip)
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Download Extension (.zip)
           </a>
           <a href="https://raw.githubusercontent.com/miezlearning/e-ta-tools/main/skrip.js" target="_blank" class="btn btn-secondary">
-            📜 Install Tampermonkey Script
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+            Install Tampermonkey Script
           </a>
         </div>
       </header>
@@ -58,9 +60,18 @@
       <section class="panel">
         <h2 class="section-title">2. Isi Data Bimbingan</h2>
         <div class="toolbar">
-          <button id="addRow" class="btn btn-secondary">+ Tambah Baris</button>
-          <button id="downloadCsv" class="btn btn-primary">⬇ Unduh CSV</button>
-          <button id="clearAll" class="btn btn-danger">Reset</button>
+          <button id="addRow" class="btn btn-secondary">
+            <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tambah Baris
+          </button>
+          <button id="downloadCsv" class="btn btn-primary">
+            <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Unduh CSV
+          </button>
+          <button id="clearAll" class="btn btn-danger">
+            <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset
+          </button>
         </div>
 
         <div class="table-wrap">
