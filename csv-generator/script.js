@@ -1080,11 +1080,6 @@
       var dosen = resolveDosen(d.dosenSlot);
       var uraian = (d.uraian || "").trim();
 
-      // Skip completely empty row if multiple rows exist
-      if (!rawDate && !d.dosenSlot && !uraian && trs.length > 1) {
-        continue;
-      }
-
       if (!rawDate) {
         invalidError = "Tanggal bimbingan pada baris #" + rowNum + " belum diisi.";
         break;
