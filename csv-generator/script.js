@@ -190,8 +190,6 @@
 
   var pembimbing1 = document.getElementById("pembimbing1");
   var pembimbing2 = document.getElementById("pembimbing2");
-  var pembimbing1Search = document.getElementById("pembimbing1Search");
-  var pembimbing2Search = document.getElementById("pembimbing2Search");
 
   var STORAGE_KEY = "eta_csv_data";
 
@@ -207,30 +205,116 @@
     return "";
   }
 
-  // ── Pembimbing dropdowns ─────────────────────────────────────────────────
-  function populatePembimbingSelect(selectEl, filter) {
-    var query = (filter || "").toLowerCase();
-    var prev = selectEl.value;
-    selectEl.innerHTML = "";
+  // ── Searchable Combobox Component ─────────────────────────────────────────
+  function setupCombobox(config) {
+    var hiddenEl = document.getElementById(config.hiddenId);
+    var inputEl = document.getElementById(config.inputId);
+    var clearEl = document.getElementById(config.clearId);
+    var dropdownEl = document.getElementById(config.dropdownId);
 
-    var empty = document.createElement("option");
-    empty.value = "";
-    empty.textContent = "— pilih dosen —";
-    selectEl.appendChild(empty);
+    function renderOptions(filter) {
+      var query = (filter || "").toLowerCase().trim();
+      dropdownEl.innerHTML = "";
+      var matches = [];
 
-    dosenSorted.forEach(function(d) {
-      if (query && d.name.toLowerCase().indexOf(query) < 0 && d.id.indexOf(query) < 0) return;
-      var o = document.createElement("option");
-      o.value = d.id;
-      o.textContent = d.name + " (" + d.id + ")";
-      selectEl.appendChild(o);
+      for (var i = 0; i < dosenSorted.length; i++) {
+        var d = dosenSorted[i];
+        if (!query || d.name.toLowerCase().indexOf(query) >= 0 || d.id.indexOf(query) >= 0) {
+          matches.push(d);
+        }
+      }
+
+      if (matches.length === 0) {
+        var empty = document.createElement("div");
+        empty.className = "combobox-item";
+        empty.style.cursor = "default";
+        empty.innerHTML = '<span class="combobox-item-name" style="color:var(--muted)">Tidak ditemukan</span>';
+        dropdownEl.appendChild(empty);
+        return;
+      }
+
+      var limit = Math.min(matches.length, 50);
+      for (var j = 0; j < limit; j++) {
+        (function(item) {
+          var div = document.createElement("div");
+          div.className = "combobox-item";
+          div.innerHTML = '<span class="combobox-item-name">' + escapeHtml(item.name) + '</span>' +
+                          '<span class="combobox-item-nip">' + item.id + '</span>';
+          div.addEventListener("mousedown", function(e) {
+            e.preventDefault();
+            selectDosen(item.id);
+          });
+          dropdownEl.appendChild(div);
+        })(matches[j]);
+      }
+    }
+
+    function selectDosen(id) {
+      var name = dosenName(id);
+      hiddenEl.value = id || "";
+      inputEl.value = id ? name + " (" + id + ")" : "";
+      clearEl.style.display = id ? "block" : "none";
+      dropdownEl.classList.add("hidden");
+      refreshAllDosenSelects();
+      saveState();
+    }
+
+    function openDropdown() {
+      var val = inputEl.value;
+      if (hiddenEl.value && val.indexOf("(") >= 0) {
+        renderOptions("");
+      } else {
+        renderOptions(val);
+      }
+      dropdownEl.classList.remove("hidden");
+    }
+
+    inputEl.addEventListener("focus", openDropdown);
+    inputEl.addEventListener("click", openDropdown);
+
+    inputEl.addEventListener("input", function() {
+      if (hiddenEl.value) {
+        hiddenEl.value = "";
+        clearEl.style.display = "none";
+        refreshAllDosenSelects();
+        saveState();
+      }
+      renderOptions(inputEl.value);
+      dropdownEl.classList.remove("hidden");
     });
 
-    // restore selection kalau masih ada
-    if (prev && selectEl.querySelector('option[value="' + prev + '"]')) {
-      selectEl.value = prev;
-    }
+    clearEl.addEventListener("click", function(e) {
+      e.stopPropagation();
+      selectDosen("");
+    });
+
+    document.addEventListener("click", function(e) {
+      if (!inputEl.contains(e.target) && !dropdownEl.contains(e.target) && !clearEl.contains(e.target)) {
+        dropdownEl.classList.add("hidden");
+        if (!hiddenEl.value) {
+          inputEl.value = "";
+        }
+      }
+    });
+
+    return {
+      set: selectDosen
+    };
   }
+
+  var cbP1 = setupCombobox({
+    hiddenId: "pembimbing1",
+    inputId: "pembimbing1Input",
+    clearId: "pembimbing1Clear",
+    dropdownId: "pembimbing1Dropdown"
+  });
+
+  var cbP2 = setupCombobox({
+    hiddenId: "pembimbing2",
+    inputId: "pembimbing2Input",
+    clearId: "pembimbing2Clear",
+    dropdownId: "pembimbing2Dropdown"
+  });
 
   function refreshAllDosenSelects() {
     var rows = tableBody.querySelectorAll("tr");
@@ -532,8 +616,8 @@
       var raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return false;
       var state = JSON.parse(raw);
-      if (state.p1) pembimbing1.value = state.p1;
-      if (state.p2) pembimbing2.value = state.p2;
+      if (state.p1) cbP1.set(state.p1);
+      if (state.p2) cbP2.set(state.p2);
       tableBody.innerHTML = "";
       if (state.rows && state.rows.length) {
         state.rows.forEach(function(r) { addRow(r); });
@@ -622,12 +706,30 @@
     for (var i = 0; i < dosenSorted.length; i++) {
       var d = dosenSorted[i];
       if (query && d.name.toLowerCase().indexOf(query) < 0 && d.id.indexOf(query) < 0) continue;
-      html += '<div class="dosen-item"><span class="dosen-name">' + escapeHtml(d.name) + '</span><code class="dosen-nip">' + d.id + '</code></div>';
+      html += '<div class="dosen-item">' +
+                '<span class="dosen-name">' + escapeHtml(d.name) + '</span>' +
+                '<div class="dosen-actions">' +
+                  '<code class="dosen-nip" title="Klik untuk copy">' + d.id + '</code>' +
+                  '<button type="button" class="btn-mini btn-set-p1" data-id="' + d.id + '">+ P1</button>' +
+                  '<button type="button" class="btn-mini btn-set-p2" data-id="' + d.id + '">+ P2</button>' +
+                '</div>' +
+              '</div>';
       count++;
     }
     if (!count) html = '<p class="hint">Tidak ditemukan.</p>';
     dosenListEl.innerHTML = html;
   }
+
+  dosenListEl.addEventListener("click", function(e) {
+    var target = e.target;
+    if (target.classList.contains("btn-set-p1")) {
+      cbP1.set(target.getAttribute("data-id"));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (target.classList.contains("btn-set-p2")) {
+      cbP2.set(target.getAttribute("data-id"));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
 
   // ── Event wiring ──────────────────────────────────────────────────────────
   addRowBtn.addEventListener("click", function() { addRow(); afterChange(); });
@@ -639,28 +741,11 @@
     afterChange();
   });
 
-  pembimbing1Search.addEventListener("input", function() {
-    populatePembimbingSelect(pembimbing1, pembimbing1Search.value);
-  });
-  pembimbing2Search.addEventListener("input", function() {
-    populatePembimbingSelect(pembimbing2, pembimbing2Search.value);
-  });
-  pembimbing1.addEventListener("change", function() {
-    refreshAllDosenSelects();
-    saveState();
-  });
-  pembimbing2.addEventListener("change", function() {
-    refreshAllDosenSelects();
-    saveState();
-  });
-
   dosenSearchEl.addEventListener("input", function() {
     renderDosenList(dosenSearchEl.value);
   });
 
   // ── Init ──────────────────────────────────────────────────────────────────
-  populatePembimbingSelect(pembimbing1, "");
-  populatePembimbingSelect(pembimbing2, "");
   renderDosenList("");
 
   if (!loadState()) {

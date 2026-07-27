@@ -25,17 +25,25 @@
       <!-- Pengaturan Pembimbing -->
       <section class="panel">
         <h2 class="section-title">1. Pilih Dosen Pembimbing</h2>
-        <p class="hint" style="margin:0 0 16px">Set dosen pembimbing kamu di sini. Nanti tinggal pilih P1 / P2 di tiap baris.</p>
+        <p class="hint" style="margin:0 0 16px">Cari dan pilih dosen pembimbing kamu di bawah ini (atau klik tombol "+ P1 / P2" di daftar referensi dosen).</p>
         <div class="pembimbing-grid">
           <div class="pembimbing-field">
-            <label class="label" for="pembimbing1">Pembimbing 1</label>
-            <input type="text" id="pembimbing1Search" class="field" placeholder="Cari nama / NIP..." autocomplete="off" />
-            <select id="pembimbing1" class="field" size="1"></select>
+            <label class="label" for="pembimbing1Input">Pembimbing 1</label>
+            <div class="combobox-wrapper" id="pembimbing1Wrap">
+              <input type="text" id="pembimbing1Input" class="field combobox-input" placeholder="🔍 Ketik nama atau NIP..." autocomplete="off" />
+              <button type="button" class="combobox-clear" id="pembimbing1Clear" title="Hapus pilihan" style="display:none;">✕</button>
+              <div class="combobox-dropdown hidden" id="pembimbing1Dropdown"></div>
+            </div>
+            <input type="hidden" id="pembimbing1" value="" />
           </div>
           <div class="pembimbing-field">
-            <label class="label" for="pembimbing2">Pembimbing 2</label>
-            <input type="text" id="pembimbing2Search" class="field" placeholder="Cari nama / NIP..." autocomplete="off" />
-            <select id="pembimbing2" class="field" size="1"></select>
+            <label class="label" for="pembimbing2Input">Pembimbing 2</label>
+            <div class="combobox-wrapper" id="pembimbing2Wrap">
+              <input type="text" id="pembimbing2Input" class="field combobox-input" placeholder="🔍 Ketik nama atau NIP..." autocomplete="off" />
+              <button type="button" class="combobox-clear" id="pembimbing2Clear" title="Hapus pilihan" style="display:none;">✕</button>
+              <div class="combobox-dropdown hidden" id="pembimbing2Dropdown"></div>
+            </div>
+            <input type="hidden" id="pembimbing2" value="" />
           </div>
         </div>
       </section>
