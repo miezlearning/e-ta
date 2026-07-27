@@ -1039,42 +1039,80 @@
   }
 
   function getRowData(tr) {
-    return {
-      date: tr.querySelector('input[type="date"]').value,
-      posisi: tr.querySelectorAll("select")[0].value,
-      dosenSlot: tr.querySelector(".dosen-select").value,
-      uraian: tr.querySelector("textarea").value
-    };
-  }
+    var dateEl = tr.querySelector(".custom-datepicker") || tr.querySelector('input[type="date"]');
+    var selects = tr.querySelectorAll(".custom-select");
+    var posisiEl = selects[0] || tr.querySelectorAll("select")[0];
+    var dosenEl = tr.querySelector(".dosen-select") || selects[1] || tr.querySelectorAll("select")[1];
+    var textarea = tr.querySelector("textarea");
 
-  function collectRows() {
-    var rows = [];
-    var trs = tableBody.querySelectorAll("tr");
-    trs.forEach(function(tr) {
-      var d = getRowData(tr);
-      var date = normalizeDate(d.date);
-      var dosen = resolveDosen(d.dosenSlot);
-      var uraian = (d.uraian || "").trim();
-      if (date || dosen || uraian) {
-        rows.push([date, d.posisi, dosen, uraian]);
-      }
-    });
-    return rows;
+    return {
+      date: dateEl ? (dateEl.value || "") : "",
+      posisi: posisiEl ? (posisiEl.value || "Proposal") : "Proposal",
+      dosenSlot: dosenEl ? (dosenEl.value || "") : "",
+      uraian: textarea ? (textarea.value || "") : ""
+    };
   }
 
   function handleDownloadCsv() {
     if (!pembimbing1.value && !pembimbing2.value) {
-      showToast("Pilih dosen pembimbing dulu di bagian atas.", "warning");
+      showToast("Pilih Dosen Pembimbing 1 atau Pembimbing 2 terlebih dahulu di bagian atas.", "warning");
+      playSound.click();
       return;
     }
-    var rows = collectRows();
-    if (!rows.length) {
-      showToast("Tidak ada data bimbingan untuk diunduh.", "warning");
+
+    var trs = tableBody.querySelectorAll("tr");
+    if (!trs.length) {
+      showToast("Tidak ada baris bimbingan pada tabel.", "warning");
+      playSound.click();
       return;
     }
-    var missing = rows.some(function(r) { return !r[2]; });
-    if (missing) {
-      if (!confirm("Ada baris yang belum pilih dosen. Tetap unduh?")) return;
+
+    var validRows = [];
+    var invalidError = "";
+
+    for (var i = 0; i < trs.length; i++) {
+      var tr = trs[i];
+      var d = getRowData(tr);
+      var rowNum = i + 1;
+
+      var rawDate = (d.date || "").trim();
+      var date = normalizeDate(rawDate);
+      var dosen = resolveDosen(d.dosenSlot);
+      var uraian = (d.uraian || "").trim();
+
+      // Skip completely empty row if multiple rows exist
+      if (!rawDate && !d.dosenSlot && !uraian && trs.length > 1) {
+        continue;
+      }
+
+      if (!rawDate) {
+        invalidError = "Tanggal bimbingan pada baris #" + rowNum + " belum diisi.";
+        break;
+      }
+
+      if (!dosen) {
+        invalidError = "Dosen pembimbing (P1/P2) pada baris #" + rowNum + " belum dipilih.";
+        break;
+      }
+
+      if (!uraian) {
+        invalidError = "Uraian bimbingan pada baris #" + rowNum + " belum diisi.";
+        break;
+      }
+
+      validRows.push([date, d.posisi, dosen, uraian]);
+    }
+
+    if (invalidError) {
+      showToast(invalidError, "danger");
+      playSound.click();
+      return;
+    }
+
+    if (!validRows.length) {
+      showToast("Harap isi data bimbingan terlebih dahulu sebelum mengunduh CSV.", "warning");
+      playSound.click();
+      return;
     }
 
     var originalHtml = downloadBtn.innerHTML;
@@ -1082,7 +1120,7 @@
     downloadBtn.innerHTML = '<svg class="spinner" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> <span>Memproses CSV...</span>';
 
     setTimeout(function() {
-      var csv = "tanggal,posisi,dosen,uraian\n" + rows
+      var csv = "tanggal,posisi,dosen,uraian\n" + validRows
         .map(function(r) { return r.map(escapeCsv).join(","); })
         .join("\n");
 
@@ -1096,12 +1134,15 @@
       a.remove();
       URL.revokeObjectURL(url);
 
+      playSound.success();
+      showToast("File CSV bimbingan berhasil diunduh!", "success");
+
       downloadBtn.innerHTML = '<svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="btn-text">CSV Terunduh</span>';
       setTimeout(function() {
         downloadBtn.innerHTML = originalHtml;
         downloadBtn.classList.remove("btn-loading");
       }, 1400);
-    }, 500);
+    }, 400);
   }
 
   // ── Autosave ke localStorage ──────────────────────────────────────────────
