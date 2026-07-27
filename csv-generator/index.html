@@ -138,48 +138,83 @@
       </section>
     </main>
 
-    <!-- Floating Round Gear Button for Sound Settings -->
-    <button id="floatingSoundBtn" type="button" class="fab-sound-btn" title="Pengaturan Custom Sound (MyInstants)">
+    <!-- Floating Round Gear Button for App Settings -->
+    <button id="floatingSoundBtn" type="button" class="fab-sound-btn" title="Pengaturan Aplikasi & Sound">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
         <circle cx="12" cy="12" r="3"/>
       </svg>
     </button>
 
-    <!-- Modal Popup Custom Sound Effects -->
+    <!-- Modal Popup Settings & Custom Sound -->
     <div id="soundModalOverlay" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
-          <h2 class="modal-title">🔊 Custom Sound Effects</h2>
+          <h2 class="modal-title">⚙️ Pengaturan & Sound</h2>
           <button id="closeSoundModal" type="button" class="modal-close" title="Tutup Modal">✕</button>
         </div>
         <div class="modal-body">
-          <p class="hint" style="margin:0 0 18px">Pilih preset atau tempelkan link MP3 langsung dari <a href="https://www.myinstants.com" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; text-decoration:underline;">MyInstants.com</a>!</p>
+          <!-- Section 1: Mode Tampilan (Theme) -->
+          <div class="setting-section">
+            <h3 class="setting-subtitle">🎨 Mode Tampilan (Theme)</h3>
+            <p class="hint" style="margin:0 0 12px">Pilih tema tampilan favorit kamu.</p>
+            <div class="theme-option-group">
+              <label class="theme-option">
+                <input type="radio" name="themeMode" value="dark" checked />
+                <span class="theme-option-card">
+                  <span class="theme-option-icon">🌙</span>
+                  <span class="theme-option-label">Dark Mode (Default)</span>
+                </span>
+              </label>
+              <label class="theme-option">
+                <input type="radio" name="themeMode" value="light" />
+                <span class="theme-option-card">
+                  <span class="theme-option-icon">☀️</span>
+                  <span class="theme-option-label">Light Mode</span>
+                </span>
+              </label>
+              <label class="theme-option">
+                <input type="radio" name="themeMode" value="system" />
+                <span class="theme-option-card">
+                  <span class="theme-option-icon">💻</span>
+                  <span class="theme-option-label">Ikuti Sistem</span>
+                </span>
+              </label>
+            </div>
+          </div>
 
-          <div style="margin-bottom:14px;">
-            <label class="label" for="soundPresetSelect">Preset Sound</label>
-            <select id="soundPresetSelect" class="field">
-              <option value="default">Default Synth (Satisfying Soft)</option>
-              <option value="pop">Pop / Bubble Sound (MyInstants)</option>
-              <option value="minecraft">Minecraft Sound Effects</option>
-              <option value="custom">Custom MP3 Link (Bebas Input)</option>
-            </select>
-          </div>
-          <div style="margin-bottom:14px;">
-            <label class="label" for="soundAddUrl">Sound Tambah Baris (URL MP3)</label>
-            <input type="text" id="soundAddUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
-          </div>
-          <div style="margin-bottom:14px;">
-            <label class="label" for="soundDupUrl">Sound Duplikat Baris (URL MP3)</label>
-            <input type="text" id="soundDupUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
-          </div>
-          <div style="margin-bottom:14px;">
-            <label class="label" for="soundDelUrl">Sound Hapus Baris (URL MP3)</label>
-            <input type="text" id="soundDelUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
+          <hr class="setting-divider" />
+
+          <!-- Section 2: Custom Sound Effects -->
+          <div class="setting-section">
+            <h3 class="setting-subtitle">🔊 Custom Sound Effects</h3>
+            <p class="hint" style="margin:0 0 14px">Pilih preset atau tempelkan link MP3 langsung dari <a href="https://www.myinstants.com" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; text-decoration:underline;">MyInstants.com</a>!</p>
+
+            <div style="margin-bottom:14px;">
+              <label class="label" for="soundPresetSelect">Preset Sound</label>
+              <select id="soundPresetSelect" class="field">
+                <option value="default">Default Synth (Satisfying Soft)</option>
+                <option value="pop">Pop / Bubble Sound (MyInstants)</option>
+                <option value="minecraft">Minecraft Sound Effects</option>
+                <option value="custom">Custom MP3 Link (Bebas Input)</option>
+              </select>
+            </div>
+            <div style="margin-bottom:14px;">
+              <label class="label" for="soundAddUrl">Sound Tambah Baris (URL MP3)</label>
+              <input type="text" id="soundAddUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
+            </div>
+            <div style="margin-bottom:14px;">
+              <label class="label" for="soundDupUrl">Sound Duplikat Baris (URL MP3)</label>
+              <input type="text" id="soundDupUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
+            </div>
+            <div style="margin-bottom:14px;">
+              <label class="label" for="soundDelUrl">Sound Hapus Baris (URL MP3)</label>
+              <input type="text" id="soundDelUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button id="saveSoundBtn" type="button" class="btn btn-primary">Simpan Custom Sound</button>
+          <button id="saveSoundBtn" type="button" class="btn btn-primary">Simpan Pengaturan</button>
           <button id="testSoundBtn" type="button" class="btn btn-secondary">🔊 Tes Suara</button>
           <button id="resetSoundBtn" type="button" class="btn btn-danger">Reset Default</button>
         </div>

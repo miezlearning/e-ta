@@ -1118,6 +1118,62 @@
     });
   }
 
+  // ── Theme Manager (Dark Mode / Light Mode / System) ─────────────────────────
+  var THEME_STORAGE_KEY = "eta_theme_preference";
+  var themeRadios = document.querySelectorAll('input[name="themeMode"]');
+  var systemMedia = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function getSavedThemePreference() {
+    try {
+      return localStorage.getItem(THEME_STORAGE_KEY) || "dark";
+    } catch(e) {
+      return "dark";
+    }
+  }
+
+  function applyThemePreference(pref) {
+    var effective = pref;
+    if (pref === "system") {
+      effective = systemMedia.matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", effective);
+
+    if (themeRadios) {
+      themeRadios.forEach(function(radio) {
+        radio.checked = (radio.value === pref);
+      });
+    }
+
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, pref);
+    } catch(e) {}
+  }
+
+  var currentThemePref = getSavedThemePreference();
+  applyThemePreference(currentThemePref);
+
+  if (themeRadios) {
+    themeRadios.forEach(function(radio) {
+      radio.addEventListener("change", function() {
+        if (this.checked) {
+          applyThemePreference(this.value);
+          playSound.click();
+          var labelText = this.value === "dark" ? "Dark Mode" : this.value === "light" ? "Light Mode" : "Ikuti Sistem";
+          showToast("Mode Tampilan diubah ke: " + labelText, "info");
+        }
+      });
+    });
+  }
+
+  if (systemMedia && systemMedia.addEventListener) {
+    systemMedia.addEventListener("change", function() {
+      var saved = getSavedThemePreference();
+      if (saved === "system") {
+        applyThemePreference("system");
+      }
+    });
+  }
+
   if (saveSoundBtn) {
     saveSoundBtn.addEventListener("click", function() {
       customSoundConfig.preset = soundPresetSelect ? soundPresetSelect.value : "custom";
@@ -1125,8 +1181,14 @@
       customSoundConfig.dupUrl = soundDupUrlInput ? soundDupUrlInput.value.trim() : "";
       customSoundConfig.delUrl = soundDelUrlInput ? soundDelUrlInput.value.trim() : "";
       saveSoundConfigToStorage();
+
+      var checkedRadio = document.querySelector('input[name="themeMode"]:checked');
+      if (checkedRadio) {
+        applyThemePreference(checkedRadio.value);
+      }
+
       playSound.add();
-      showToast("Custom sound berhasil disimpan!", "success");
+      showToast("Pengaturan aplikasi berhasil disimpan!", "success");
       if (soundModalOverlay) soundModalOverlay.classList.add("hidden");
     });
   }
@@ -1145,7 +1207,10 @@
       customSoundConfig = { preset: "default", addUrl: "", dupUrl: "", delUrl: "" };
       saveSoundConfigToStorage();
       syncSoundPanelInputs();
-      showToast("Custom sound di-reset ke Default Synth.", "info");
+
+      applyThemePreference("dark");
+
+      showToast("Pengaturan di-reset ke Default (Dark Mode & Default Sound).", "info");
     });
   }
 
@@ -1214,9 +1279,9 @@
     },
     {
       targetId: "floatingSoundBtn",
-      title: "🔊 Step 6: Custom Sound Effects",
-      icon: "🎵",
-      desc: "Klik tombol gear di pojok kanan bawah ini untuk mengubah efek suara tombol (Minecraft, Pop, Synth, atau link MP3 kamu sendiri)!",
+      title: "⚙️ Step 6: Mode Tampilan & Sound Effects",
+      icon: "⚙️",
+      desc: "Klik tombol gear di pojok kanan bawah ini untuk mengganti Mode Tampilan (Dark Mode, Light Mode, atau Ikuti Sistem) serta Custom Sound Effects!",
       tip: "Kamu bisa mengulang panduan ini kapan saja via tombol '🚀 Panduan Interaktif' di atas.",
       prefPosition: "top"
     }
