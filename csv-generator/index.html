@@ -41,11 +41,15 @@
             <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
             Tampermonkey Script
           </a>
+          <button id="startTourBtn" type="button" class="btn btn-tour">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="btn-text">🚀 Panduan Interaktif</span>
+          </button>
         </div>
       </header>
 
       <!-- Pengaturan Pembimbing -->
-      <section class="panel">
+      <section class="panel" id="panelPembimbing">
         <h2 class="section-title">1. Pilih Dosen Pembimbing</h2>
         <p class="hint" style="margin:0 0 16px">Set dosen pembimbing kamu di sini. Nanti tinggal pilih P1 / P2 di tiap baris tabel.</p>
         <div class="pembimbing-grid">
@@ -71,7 +75,7 @@
       </section>
 
       <!-- Tabel Bimbingan -->
-      <section class="panel">
+      <section class="panel" id="panelTable">
         <div class="section-header">
           <h2 class="section-title">2. Isi Data Bimbingan</h2>
           <div class="toolbar">
@@ -178,6 +182,52 @@
           <button id="saveSoundBtn" type="button" class="btn btn-primary">Simpan Custom Sound</button>
           <button id="testSoundBtn" type="button" class="btn btn-secondary">🔊 Tes Suara</button>
           <button id="resetSoundBtn" type="button" class="btn btn-danger">Reset Default</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Tour Guide Component -->
+    <div id="tourOverlay" class="tour-overlay hidden" aria-hidden="true">
+      <!-- Backdrop Dimmer with SVG Mask / Spotlight Box -->
+      <div id="tourSpotlight" class="tour-spotlight">
+        <div class="tour-spotlight-pulse"></div>
+      </div>
+
+      <!-- Glassmorphism Floating Tooltip Card -->
+      <div id="tourCard" class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+        <div class="tour-header">
+          <div class="tour-step-badge">
+            <span class="tour-badge-pulse"></span>
+            <span id="tourStepCounter">Langkah 1 dari 6</span>
+          </div>
+          <button id="tourCloseBtn" type="button" class="tour-close-btn" title="Tutup Tour (Esc)">✕</button>
+        </div>
+
+        <div class="tour-progress-track">
+          <div id="tourProgressBar" class="tour-progress-bar" style="width: 16.66%;"></div>
+        </div>
+
+        <div class="tour-body">
+          <div id="tourIconWrap" class="tour-icon-wrap">🚀</div>
+          <div class="tour-content-wrap">
+            <h3 id="tourTitle" class="tour-title">Judul Langkah</h3>
+            <p id="tourDescription" class="tour-desc">Penjelasan langkah penggunaan...</p>
+            <div id="tourTipBox" class="tour-tip-box">
+              <span class="tour-tip-icon">💡</span>
+              <span id="tourTipText" class="tour-tip-text">Tips efisiensi untuk kamu!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tour-footer">
+          <div class="tour-hotkey-hint">
+            <span>Pakai <kbd>←</kbd> <kbd>→</kbd> <kbd>Esc</kbd></span>
+          </div>
+          <div class="tour-actions">
+            <button id="tourSkipBtn" type="button" class="btn-tour-link">Lewati</button>
+            <button id="tourPrevBtn" type="button" class="btn btn-secondary btn-sm" disabled>Kembali</button>
+            <button id="tourNextBtn" type="button" class="btn btn-primary btn-sm">Lanjut →</button>
+          </div>
         </div>
       </div>
     </div>

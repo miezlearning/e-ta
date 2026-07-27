@@ -1151,6 +1151,270 @@
 
   syncSoundPanelInputs();
 
+  // ── Interactive Custom Tour Guide Engine ──────────────────────────────────
+  var tourOverlay = document.getElementById("tourOverlay");
+  var tourSpotlight = document.getElementById("tourSpotlight");
+  var tourCard = document.getElementById("tourCard");
+  var tourStepCounter = document.getElementById("tourStepCounter");
+  var tourProgressBar = document.getElementById("tourProgressBar");
+  var tourIconWrap = document.getElementById("tourIconWrap");
+  var tourTitle = document.getElementById("tourTitle");
+  var tourDescription = document.getElementById("tourDescription");
+  var tourTipBox = document.getElementById("tourTipBox");
+  var tourTipText = document.getElementById("tourTipText");
+  var tourPrevBtn = document.getElementById("tourPrevBtn");
+  var tourNextBtn = document.getElementById("tourNextBtn");
+  var tourCloseBtn = document.getElementById("tourCloseBtn");
+  var tourSkipBtn = document.getElementById("tourSkipBtn");
+  var startTourBtn = document.getElementById("startTourBtn");
+
+  var currentTourStepIndex = 0;
+  var isTourActive = false;
+
+  var tourSteps = [
+    {
+      targetId: "downloadExtBtn",
+      title: "🧩 Step 1: Siapkan Extension / Script",
+      icon: "🧩",
+      desc: "Untuk mengotomatisasi pengisian bimbingan di E-TA FT UNMUL, download Extension Chrome (.zip) atau pasang script Tampermonkey terlebih dahulu.",
+      tip: "Instalasi ini cukup dilakukan 1 kali saja di browser kamu.",
+      prefPosition: "bottom"
+    },
+    {
+      targetId: "panelPembimbing",
+      title: "👨‍🏫 Step 2: Atur Dosen Pembimbing",
+      icon: "🔍",
+      desc: "Ketik nama atau NIP Dosen Pembimbing 1 & Pembimbing 2. Setelah diset, kamu tinggal memilih P1 atau P2 di setiap baris bimbingan secara instan.",
+      tip: "Ketik beberapa huruf nama dosen untuk rekomendasi otomatis.",
+      prefPosition: "bottom"
+    },
+    {
+      targetId: "panelTable",
+      title: "📝 Step 3: Isi Data Bimbingan",
+      icon: "✍️",
+      desc: "Masukkan Tanggal, Posisi (Proposal/Hasil/Skripsi), Dosen, dan Uraian. Gunakan tombol 'Tambah Baris' atau ikon duplikat 📋 di kolom aksi.",
+      tip: "Gunakan tombol duplikat 📋 untuk mempercepat pembuatan baris baru!",
+      prefPosition: "top"
+    },
+    {
+      targetId: "aiPanel",
+      title: "✨ Step 4: Generate Uraian dengan AI",
+      icon: "✨",
+      desc: "Bingung mau tulis uraian apa? Klik tombol ✨ di kolom uraian tabel untuk membuat kalimat deskripsi bimbingan akademis otomatis!",
+      tip: "Fitur AI ini 100% gratis, praktis, dan tidak memerlukan API key.",
+      prefPosition: "top"
+    },
+    {
+      targetId: "downloadCsv",
+      title: "📥 Step 5: Unduh CSV & Import ke Extension",
+      icon: "🚀",
+      desc: "Jika data bimbingan sudah lengkap, klik 'Unduh CSV'. Buka halaman E-TA UNMUL di browser, buka Extension Chrome, import file CSV, lalu klik 'Mulai'!",
+      tip: "Extension akan otomatis mengisi & mengirim form bimbingan satu per satu.",
+      prefPosition: "bottom"
+    },
+    {
+      targetId: "floatingSoundBtn",
+      title: "🔊 Step 6: Custom Sound Effects",
+      icon: "🎵",
+      desc: "Klik tombol gear di pojok kanan bawah ini untuk mengubah efek suara tombol (Minecraft, Pop, Synth, atau link MP3 kamu sendiri)!",
+      tip: "Kamu bisa mengulang panduan ini kapan saja via tombol '🚀 Panduan Interaktif' di atas.",
+      prefPosition: "top"
+    }
+  ];
+
+  function positionTourCard(targetRect, prefPos) {
+    if (!tourCard) return;
+    var cardRect = tourCard.getBoundingClientRect();
+    var cardWidth = cardRect.width || 420;
+    var cardHeight = cardRect.height || 240;
+
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+
+    var top = 0;
+    var left = 0;
+    var gap = 18;
+
+    if (prefPos === "bottom" && targetRect.bottom + cardHeight + gap < vh) {
+      top = targetRect.bottom + gap;
+    } else if (prefPos === "top" && targetRect.top - cardHeight - gap > 0) {
+      top = targetRect.top - cardHeight - gap;
+    } else if (targetRect.bottom + cardHeight + gap < vh) {
+      top = targetRect.bottom + gap;
+    } else if (targetRect.top - cardHeight - gap > 0) {
+      top = targetRect.top - cardHeight - gap;
+    } else {
+      top = Math.max(16, (vh - cardHeight) / 2);
+    }
+
+    var targetCenterX = targetRect.left + targetRect.width / 2;
+    left = targetCenterX - cardWidth / 2;
+
+    if (left < 16) left = 16;
+    if (left + cardWidth > vw - 16) left = vw - cardWidth - 16;
+
+    tourCard.style.top = Math.round(top) + "px";
+    tourCard.style.left = Math.round(left) + "px";
+  }
+
+  function updateTourSpotlight() {
+    if (!isTourActive) return;
+    var step = tourSteps[currentTourStepIndex];
+    if (!step) return;
+
+    var targetEl = document.getElementById(step.targetId);
+    if (!targetEl) return;
+
+    var rect = targetEl.getBoundingClientRect();
+    var pad = 8;
+
+    tourSpotlight.style.top = Math.round(rect.top - pad) + "px";
+    tourSpotlight.style.left = Math.round(rect.left - pad) + "px";
+    tourSpotlight.style.width = Math.round(rect.width + pad * 2) + "px";
+    tourSpotlight.style.height = Math.round(rect.height + pad * 2) + "px";
+
+    positionTourCard(rect, step.prefPosition);
+  }
+
+  function renderTourStep(index) {
+    if (index < 0 || index >= tourSteps.length) return;
+    currentTourStepIndex = index;
+    var step = tourSteps[index];
+
+    var targetEl = document.getElementById(step.targetId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    tourStepCounter.textContent = "Langkah " + (index + 1) + " dari " + tourSteps.length;
+    var progressPercent = ((index + 1) / tourSteps.length) * 100;
+    tourProgressBar.style.width = progressPercent + "%";
+
+    tourIconWrap.textContent = step.icon || "💡";
+    tourTitle.textContent = step.title;
+    tourDescription.textContent = step.desc;
+
+    if (step.tip) {
+      tourTipBox.style.display = "flex";
+      tourTipText.textContent = step.tip;
+    } else {
+      tourTipBox.style.display = "none";
+    }
+
+    tourPrevBtn.disabled = (index === 0);
+
+    if (index === tourSteps.length - 1) {
+      tourNextBtn.textContent = "Selesai 🎉";
+      tourNextBtn.classList.remove("btn-primary");
+      tourNextBtn.classList.add("btn-tour");
+    } else {
+      tourNextBtn.textContent = "Lanjut →";
+      tourNextBtn.classList.add("btn-primary");
+      tourNextBtn.classList.remove("btn-tour");
+    }
+
+    setTimeout(function() {
+      updateTourSpotlight();
+    }, 150);
+
+    playSound.click();
+  }
+
+  function startTour() {
+    isTourActive = true;
+    currentTourStepIndex = 0;
+    if (tourOverlay) tourOverlay.classList.remove("hidden");
+    renderTourStep(0);
+  }
+
+  function endTour(isFinished) {
+    isTourActive = false;
+    if (tourOverlay) tourOverlay.classList.add("hidden");
+    try {
+      localStorage.setItem("eta_tour_seen", "true");
+    } catch(err) {}
+
+    if (isFinished) {
+      showToast("Selamat! Kamu sudah paham cara pakai E-TA Tools 🎉", "success");
+      playSound.add();
+    }
+  }
+
+  if (startTourBtn) {
+    startTourBtn.addEventListener("click", function() {
+      startTour();
+    });
+  }
+
+  if (tourNextBtn) {
+    tourNextBtn.addEventListener("click", function() {
+      if (currentTourStepIndex < tourSteps.length - 1) {
+        renderTourStep(currentTourStepIndex + 1);
+      } else {
+        endTour(true);
+      }
+    });
+  }
+
+  if (tourPrevBtn) {
+    tourPrevBtn.addEventListener("click", function() {
+      if (currentTourStepIndex > 0) {
+        renderTourStep(currentTourStepIndex - 1);
+      }
+    });
+  }
+
+  if (tourCloseBtn) {
+    tourCloseBtn.addEventListener("click", function() {
+      endTour(false);
+    });
+  }
+
+  if (tourSkipBtn) {
+    tourSkipBtn.addEventListener("click", function() {
+      endTour(false);
+    });
+  }
+
+  window.addEventListener("resize", function() {
+    if (isTourActive) updateTourSpotlight();
+  });
+
+  window.addEventListener("scroll", function() {
+    if (isTourActive) updateTourSpotlight();
+  }, { passive: true });
+
+  document.addEventListener("keydown", function(e) {
+    if (!isTourActive) return;
+
+    if (e.key === "ArrowRight" || e.key === "Enter") {
+      e.preventDefault();
+      if (currentTourStepIndex < tourSteps.length - 1) {
+        renderTourStep(currentTourStepIndex + 1);
+      } else {
+        endTour(true);
+      }
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      if (currentTourStepIndex > 0) {
+        renderTourStep(currentTourStepIndex - 1);
+      }
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      endTour(false);
+    }
+  });
+
+  // Auto start for first time visitors
+  try {
+    var hasSeenTour = localStorage.getItem("eta_tour_seen");
+    if (!hasSeenTour) {
+      setTimeout(function() {
+        startTour();
+      }, 1600);
+    }
+  } catch(e) {}
+
   // ── Init ──────────────────────────────────────────────────────────────────
   renderDosenList("");
 
