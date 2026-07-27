@@ -1485,6 +1485,84 @@
     }
   } catch(e) {}
 
+  // ── Custom Modern Tooltip Manager ─────────────────────────────────────────
+  var tooltipEl = document.createElement("div");
+  tooltipEl.className = "custom-tooltip-box";
+  tooltipEl.innerHTML = '<span class="tooltip-text"></span><div class="custom-tooltip-arrow"></div>';
+  document.body.appendChild(tooltipEl);
+
+  var tooltipTextEl = tooltipEl.querySelector(".tooltip-text");
+  var activeTooltipTarget = null;
+  var tooltipTimeout = null;
+
+  function showCustomTooltip(targetEl, text) {
+    if (!text) return;
+    activeTooltipTarget = targetEl;
+    tooltipTextEl.textContent = text;
+    tooltipEl.classList.remove("visible");
+
+    var rect = targetEl.getBoundingClientRect();
+    var ttRect = tooltipEl.getBoundingClientRect();
+    var ttWidth = ttRect.width || 120;
+    var ttHeight = ttRect.height || 32;
+
+    var vw = window.innerWidth;
+    var pos = "top";
+
+    var top = rect.top - ttHeight - 10;
+    if (top < 8) {
+      top = rect.bottom + 10;
+      pos = "bottom";
+    }
+
+    var left = rect.left + (rect.width / 2) - (ttWidth / 2);
+    if (left < 10) left = 10;
+    if (left + ttWidth > vw - 10) left = vw - ttWidth - 10;
+
+    tooltipEl.style.top = Math.round(top) + "px";
+    tooltipEl.style.left = Math.round(left) + "px";
+    tooltipEl.setAttribute("data-pos", pos);
+
+    requestAnimationFrame(function() {
+      tooltipEl.classList.add("visible");
+    });
+  }
+
+  function hideCustomTooltip() {
+    activeTooltipTarget = null;
+    if (tooltipTimeout) clearTimeout(tooltipTimeout);
+    tooltipEl.classList.remove("visible");
+  }
+
+  document.addEventListener("mouseover", function(e) {
+    var target = e.target.closest("[data-tooltip], [title]");
+    if (target && !target.closest("#tourCard") && !target.closest("#tourOverlay")) {
+      var titleText = target.getAttribute("title");
+      if (titleText) {
+        target.setAttribute("data-tooltip", titleText);
+        target.removeAttribute("title");
+      }
+      var text = target.getAttribute("data-tooltip");
+      if (text) {
+        if (tooltipTimeout) clearTimeout(tooltipTimeout);
+        tooltipTimeout = setTimeout(function() {
+          showCustomTooltip(target, text);
+        }, 120);
+      }
+    }
+  });
+
+  document.addEventListener("mouseout", function(e) {
+    var target = e.target.closest("[data-tooltip]");
+    if (target && target === activeTooltipTarget) {
+      hideCustomTooltip();
+    }
+  });
+
+  document.addEventListener("scroll", function() {
+    if (activeTooltipTarget) hideCustomTooltip();
+  }, { passive: true });
+
   // ── Init ──────────────────────────────────────────────────────────────────
   renderDosenList("");
 

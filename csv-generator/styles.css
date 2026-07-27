@@ -1364,4 +1364,67 @@ tr:hover .table-cell {
   transform: translateY(-1px);
 }
 
+/* ── Custom Modern Tooltip System ────────────────────────────────────────── */
+.custom-tooltip-box {
+  position: fixed;
+  z-index: 11000;
+  pointer-events: none;
+  padding: 6px 12px;
+  background: rgba(18, 18, 22, 0.94);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(234, 88, 12, 0.15);
+  opacity: 0;
+  transform: scale(0.92) translateY(4px);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-tooltip-box.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+html[data-theme="light"] .custom-tooltip-box {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 0 15px rgba(234, 88, 12, 0.1);
+  color: #18181b;
+}
+
+.custom-tooltip-arrow {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: inherit;
+  border: inherit;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.custom-tooltip-box[data-pos="top"] .custom-tooltip-arrow {
+  bottom: -4px;
+  left: 50%;
+  margin-left: -3px;
+  border-top: none;
+  border-left: none;
+}
+
+.custom-tooltip-box[data-pos="bottom"] .custom-tooltip-arrow {
+  top: -4px;
+  left: 50%;
+  margin-left: -3px;
+  border-bottom: none;
+  border-right: none;
+}
+
+
 
