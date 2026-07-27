@@ -1,6 +1,23 @@
 (function() {
   "use strict";
 
+  // ── Initial Tab Session Splash Loader (sessionStorage) ────────────────────
+  var appLoader = document.getElementById("appLoader");
+  if (appLoader) {
+    var hasSeenSplash = sessionStorage.getItem("eta_splash_seen");
+    if (hasSeenSplash) {
+      appLoader.style.display = "none";
+    } else {
+      setTimeout(function() {
+        appLoader.classList.add("hidden-loader");
+        sessionStorage.setItem("eta_splash_seen", "true");
+        setTimeout(function() {
+          appLoader.style.display = "none";
+        }, 400);
+      }, 1000);
+    }
+  }
+
   // ── Data Dosen ─────────────────────────────────────────────────────────────
   var dosenData = [
     {id:"081251753882",name:"Ema Dwi Arsita, S.Ars., M.Ars."},
