@@ -83,7 +83,7 @@ body.page {
 .container {
   position: relative;
   z-index: 10;
-  max-width: 1100px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 40px 20px 80px;
 }
@@ -417,10 +417,11 @@ body.page {
 
 .table {
   width: 100%;
-  min-width: 1020px;
+  min-width: 750px;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--ink);
+  table-layout: auto;
 }
 
 .table-head {
@@ -431,20 +432,21 @@ body.page {
   letter-spacing: 1px;
   color: var(--muted);
   background: #141418;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--hairline-strong);
+  white-space: nowrap;
 }
 
-.th-no { width: 50px; text-align: center; }
-.th-order { width: 66px; text-align: center; }
-.th-date { width: 165px; }
-.th-posisi { width: 145px; }
-.th-dosen { width: 185px; }
-.th-uraian { min-width: 320px; }
-.th-aksi { width: 96px; text-align: center; }
+.th-no { width: 38px; text-align: center; }
+.th-order { width: 56px; text-align: center; }
+.th-date { width: 145px; }
+.th-posisi { width: 130px; }
+.th-dosen { width: 165px; }
+.th-uraian { width: auto; }
+.th-aksi { width: 86px; text-align: center; }
 
 .table-cell {
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-top: 1px solid var(--hairline);
   vertical-align: middle;
 }
