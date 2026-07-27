@@ -27,7 +27,7 @@
   - [Langkah 3: Auto-Generate Uraian Akademis dengan AI](#langkah-3-auto-generate-uraian-akademis-dengan-ai)
   - [Langkah 4: Unduh CSV & Import ke Extension](#langkah-4-unduh-csv--import-ke-extension)
 - [⚙️ Fitur Kustom: Mode Tampilan & Efek Suara](#️-fitur-kustom-mode-tampilan--efek-suara)
-- [💡 Panduan Interaktif & Shortcut](#-panduan-interaktif--shortcut)
+- [💡 Panduan Pengisian & Shortcut](#-panduan-pengisian--shortcut)
 - [❓ FAQ (Frequently Asked Questions)](#-faq-frequently-asked-questions)
 - [🔒 Privasi & Keamanan Data](#-privasi--keamanan-data)
 - [🛠️ Tech Stack & Arsitektur](#️-tech-stack--arsitektur)
@@ -131,14 +131,14 @@ Klik tombol ikon Pengaturan (⚙️) di pojok kanan bawah aplikasi untuk membuka
 
 ---
 
-## 💡 Panduan Interaktif & Shortcut
+## 💡 Panduan Pengisian & Shortcut
 
-Website ini dilengkapi dengan **Panduan Interaktif (Tour Guide)** yang dapat diakses kapan saja:
-- Klik tombol **Panduan Interaktif** di bagian header hero.
+Website ini dilengkapi dengan **Panduan Pengisian (Tour Guide)** yang dapat diakses kapan saja:
+- Klik tombol **Panduan Pengisian** di bagian header hero.
 - Gunakan tombol keyboard berikut saat Tour berlangsung:
   - <kbd>→</kbd> / <kbd>Enter</kbd> : Lanjut ke langkah berikutnya.
   - <kbd>←</kbd> : Kembali ke langkah sebelumnya.
-  - <kbd>Esc</kbd> : Menutup panduan interaktif.
+  - <kbd>Esc</kbd> : Menutup panduan pengisian.
 
 ---
 
