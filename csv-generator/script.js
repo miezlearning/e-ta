@@ -569,7 +569,7 @@
     return rows;
   }
 
-  function downloadCsv() {
+  function handleDownloadCsv() {
     if (!pembimbing1.value && !pembimbing2.value) {
       alert("Pilih dosen pembimbing dulu di bagian atas.");
       return;
@@ -579,25 +579,36 @@
       alert("Tidak ada data.");
       return;
     }
-    // Validasi: ada baris yang belum pilih dosen?
     var missing = rows.some(function(r) { return !r[2]; });
     if (missing) {
       if (!confirm("Ada baris yang belum pilih dosen. Tetap unduh?")) return;
     }
 
-    var csv = "tanggal,posisi,dosen,uraian\n" + rows
-      .map(function(r) { return r.map(escapeCsv).join(","); })
-      .join("\n");
+    var originalHtml = downloadBtn.innerHTML;
+    downloadBtn.classList.add("btn-loading");
+    downloadBtn.innerHTML = '<svg class="spinner" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> <span>Memproses CSV...</span>';
 
-    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = "bimbingan.csv";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    setTimeout(function() {
+      var csv = "tanggal,posisi,dosen,uraian\n" + rows
+        .map(function(r) { return r.map(escapeCsv).join(","); })
+        .join("\n");
+
+      var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "bimbingan.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      downloadBtn.innerHTML = '<span>✓ CSV Terunduh!</span>';
+      setTimeout(function() {
+        downloadBtn.innerHTML = originalHtml;
+        downloadBtn.classList.remove("btn-loading");
+      }, 1400);
+    }, 500);
   }
 
   // ── Autosave ke localStorage ──────────────────────────────────────────────
@@ -742,13 +753,37 @@
 
   // ── Event wiring ──────────────────────────────────────────────────────────
   addRowBtn.addEventListener("click", function() { addRow(); afterChange(); });
-  downloadBtn.addEventListener("click", downloadCsv);
+  downloadBtn.addEventListener("click", handleDownloadCsv);
   clearBtn.addEventListener("click", function() {
     if (!confirm("Reset semua baris? Data pembimbing tetap tersimpan.")) return;
     tableBody.innerHTML = "";
     addRow();
     afterChange();
   });
+
+  var downloadExtBtn = document.getElementById("downloadExtBtn");
+  if (downloadExtBtn) {
+    downloadExtBtn.addEventListener("click", function() {
+      var originalHtml = downloadExtBtn.innerHTML;
+      downloadExtBtn.classList.add("btn-loading");
+      downloadExtBtn.innerHTML = '<svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> <span>Menyiapkan Extension...</span>';
+      
+      setTimeout(function() {
+        var a = document.createElement("a");
+        a.href = "extension.zip";
+        a.download = "extension.zip";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        downloadExtBtn.innerHTML = '<span>✓ File Diunduh!</span>';
+        setTimeout(function() {
+          downloadExtBtn.innerHTML = originalHtml;
+          downloadExtBtn.classList.remove("btn-loading");
+        }, 1500);
+      }, 700);
+    });
+  }
 
   dosenSearchEl.addEventListener("input", function() {
     renderDosenList(dosenSearchEl.value);
