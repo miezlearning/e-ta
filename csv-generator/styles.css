@@ -54,9 +54,45 @@ body.page {
 .container {
   position: relative;
   z-index: 10;
-  max-width: 1000px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 48px 20px 80px;
+  padding: 40px 20px 80px;
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+  margin-top: 24px;
+  align-items: start;
+}
+
+.layout-main {
+  min-width: 0;
+}
+
+.layout-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: sticky;
+  top: 20px;
+}
+
+.pembimbing-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .layout-sidebar {
+    position: static;
+  }
 }
 
 /* ── Hero Section ────────────────────────────────────────────────────────── */

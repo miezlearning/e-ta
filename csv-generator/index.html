@@ -30,92 +30,101 @@
         </div>
       </header>
 
-      <!-- Pengaturan Pembimbing -->
-      <section class="panel">
-        <h2 class="section-title">1. Pilih Dosen Pembimbing</h2>
-        <p class="hint" style="margin:0 0 16px">Cari dan pilih dosen pembimbing kamu di bawah ini (atau klik "+ P1 / P2" di daftar dosen).</p>
-        <div class="pembimbing-grid">
-          <div class="pembimbing-field">
-            <label class="label" for="pembimbing1Input">Pembimbing 1</label>
-            <div class="combobox-wrapper" id="pembimbing1Wrap">
-              <input type="text" id="pembimbing1Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
-              <button type="button" class="combobox-clear" id="pembimbing1Clear" title="Hapus pilihan" style="display:none;">✕</button>
-              <div class="combobox-dropdown hidden" id="pembimbing1Dropdown"></div>
+      <!-- 2-Column Dashboard Layout -->
+      <div class="layout-grid">
+        <!-- Main Workspace (Left Column) -->
+        <div class="layout-main">
+          <!-- Tabel Bimbingan -->
+          <section class="panel" style="margin-top: 0;">
+            <h2 class="section-title">2. Isi Data Bimbingan</h2>
+            <div class="toolbar">
+              <button id="addRow" class="btn btn-secondary">
+                <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Tambah Baris
+              </button>
+              <button id="downloadCsv" class="btn btn-primary">
+                <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                Unduh CSV
+              </button>
+              <button id="clearAll" class="btn btn-danger">
+                <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                Reset
+              </button>
             </div>
-            <input type="hidden" id="pembimbing1" value="" />
-          </div>
-          <div class="pembimbing-field">
-            <label class="label" for="pembimbing2Input">Pembimbing 2</label>
-            <div class="combobox-wrapper" id="pembimbing2Wrap">
-              <input type="text" id="pembimbing2Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
-              <button type="button" class="combobox-clear" id="pembimbing2Clear" title="Hapus pilihan" style="display:none;">✕</button>
-              <div class="combobox-dropdown hidden" id="pembimbing2Dropdown"></div>
+
+            <div class="table-wrap">
+              <table id="dataTable" class="table">
+                <thead>
+                  <tr>
+                    <th class="table-head th-no">#</th>
+                    <th class="table-head th-order">Urut</th>
+                    <th class="table-head th-date">Tanggal</th>
+                    <th class="table-head th-posisi">Posisi</th>
+                    <th class="table-head th-dosen">Dosen</th>
+                    <th class="table-head th-uraian">Uraian</th>
+                    <th class="table-head th-aksi">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
             </div>
-            <input type="hidden" id="pembimbing2" value="" />
-          </div>
-        </div>
-      </section>
 
-      <!-- Tabel Bimbingan -->
-      <section class="panel">
-        <h2 class="section-title">2. Isi Data Bimbingan</h2>
-        <div class="toolbar">
-          <button id="addRow" class="btn btn-secondary">
-            <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Tambah Baris
-          </button>
-          <button id="downloadCsv" class="btn btn-primary">
-            <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-            Unduh CSV
-          </button>
-          <button id="clearAll" class="btn btn-danger">
-            <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            Reset
-          </button>
-        </div>
+            <p class="hint">Tanggal auto jadi DD-MM-YYYY saat export. Tombol ✨ buat generate uraian otomatis pakai AI.</p>
+          </section>
 
-        <div class="table-wrap">
-          <table id="dataTable" class="table">
-            <thead>
-              <tr>
-                <th class="table-head th-no">#</th>
-                <th class="table-head th-order">Urut</th>
-                <th class="table-head th-date">Tanggal</th>
-                <th class="table-head th-posisi">Posisi</th>
-                <th class="table-head th-dosen">Dosen</th>
-                <th class="table-head th-uraian">Uraian</th>
-                <th class="table-head th-aksi">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
-        </div>
+          <!-- AI Info -->
+          <section class="panel" id="aiPanel">
+            <h2 class="section-title">✨ AI Uraian</h2>
+            <p class="hint" style="margin:0">Klik tombol ✨ di kolom uraian buat generate otomatis. Gratis, ga perlu API key. (Agak lambat ~10 detik, sabar ya.)</p>
+          </section>
 
-        <p class="hint">Tanggal auto jadi DD-MM-YYYY saat export. Tombol ✨ buat generate uraian otomatis pakai AI.</p>
-      </section>
-
-      <!-- AI Info -->
-      <section class="panel" id="aiPanel">
-        <h2 class="section-title">✨ AI Uraian</h2>
-        <p class="hint" style="margin:0">Klik tombol ✨ di kolom uraian buat generate otomatis. Gratis, ga perlu API key. (Agak lambat ~10 detik, sabar ya.)</p>
-      </section>
-
-      <!-- Format CSV -->
-      <section class="panel">
-        <h2 class="section-title">Format CSV</h2>
-        <pre class="code-block">tanggal,posisi,dosen,uraian
+          <!-- Format CSV -->
+          <section class="panel">
+            <h2 class="section-title">Format CSV</h2>
+            <pre class="code-block">tanggal,posisi,dosen,uraian
 05-06-2026,Proposal,198209012009122003,Revisi BAB 1
 06-06-2026,Hasil,199107272023211025,Diskusi metodologi</pre>
-        <p class="hint">Kolom dosen otomatis terisi NIP dari pembimbing yang kamu pilih.</p>
-      </section>
+            <p class="hint">Kolom dosen otomatis terisi NIP dari pembimbing yang kamu pilih.</p>
+          </section>
+        </div>
 
-      <!-- Daftar Dosen -->
-      <section class="panel">
-        <h2 class="section-title">Daftar Dosen (Referensi)</h2>
-        <label class="label" for="dosenSearch">Cari dosen:</label>
-        <input id="dosenSearch" type="text" class="field" placeholder="Ketik nama atau NIP..." style="margin-bottom:12px" />
-        <div class="dosen-list" id="dosenList"></div>
-      </section>
+        <!-- Sidebar Setup & References (Right Column) -->
+        <aside class="layout-sidebar">
+          <!-- Pengaturan Pembimbing -->
+          <section class="panel" style="margin-top: 0;">
+            <h2 class="section-title">1. Pilih Pembimbing</h2>
+            <p class="hint" style="margin:0 0 14px">Set dosen pembimbing kamu di sini (atau klik "+ P1 / P2" di bawah).</p>
+            <div class="pembimbing-vertical">
+              <div class="pembimbing-field">
+                <label class="label" for="pembimbing1Input">Pembimbing 1</label>
+                <div class="combobox-wrapper" id="pembimbing1Wrap">
+                  <input type="text" id="pembimbing1Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
+                  <button type="button" class="combobox-clear" id="pembimbing1Clear" title="Hapus pilihan" style="display:none;">✕</button>
+                  <div class="combobox-dropdown hidden" id="pembimbing1Dropdown"></div>
+                </div>
+                <input type="hidden" id="pembimbing1" value="" />
+              </div>
+              <div class="pembimbing-field">
+                <label class="label" for="pembimbing2Input">Pembimbing 2</label>
+                <div class="combobox-wrapper" id="pembimbing2Wrap">
+                  <input type="text" id="pembimbing2Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
+                  <button type="button" class="combobox-clear" id="pembimbing2Clear" title="Hapus pilihan" style="display:none;">✕</button>
+                  <div class="combobox-dropdown hidden" id="pembimbing2Dropdown"></div>
+                </div>
+                <input type="hidden" id="pembimbing2" value="" />
+              </div>
+            </div>
+          </section>
+
+          <!-- Daftar Dosen Referensi -->
+          <section class="panel">
+            <h2 class="section-title">Referensi Dosen</h2>
+            <label class="label" for="dosenSearch">Cari Dosen:</label>
+            <input id="dosenSearch" type="text" class="field" placeholder="Ketik nama atau NIP..." style="margin-bottom:12px" />
+            <div class="dosen-list" id="dosenList"></div>
+          </section>
+        </aside>
+      </div>
     </main>
 
     <script src="script.js"></script>
