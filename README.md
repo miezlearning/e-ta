@@ -68,7 +68,7 @@ Buka Generator CSV langsung dari browser Anda tanpa instalasi server:
 Pilih salah satu metode otomatisasi yang Anda sukai:
 
 #### Pilihan A: Chrome Extension (Rekomendasi)
-1. Unduh file package extension: [**Download Extension (.zip)**](https://miezlearning.github.io/e-ta/extension.zip).
+1. Unduh file package extension: [**Pasang Extension (.zip)**](https://miezlearning.github.io/e-ta/extension.zip).
 2. Ekstrak file `.zip` tersebut di komputer Anda.
 3. Buka browser Chrome / Edge / Brave / Opera dan navigasi ke `chrome://extensions`.
 4. Aktifkan **Developer mode** di pojok kanan atas.
