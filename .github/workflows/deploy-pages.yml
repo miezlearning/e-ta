@@ -32,8 +32,7 @@ jobs:
 
       - name: Package extension ZIP
         run: |
-          cd extension
-          zip -r ../csv-generator/extension.zip .
+          zip -r csv-generator/extension.zip extension/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
