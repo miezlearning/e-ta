@@ -43,7 +43,7 @@
           </a>
           <button id="startTourBtn" type="button" class="btn btn-tour">
             <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <span class="btn-text">🚀 Panduan Interaktif</span>
+            <span class="btn-text">Panduan Interaktif</span>
           </button>
         </div>
       </header>
@@ -56,7 +56,7 @@
           <div class="pembimbing-field">
             <label class="label" for="pembimbing1Input">Pembimbing 1</label>
             <div class="combobox-wrapper" id="pembimbing1Wrap">
-              <input type="text" id="pembimbing1Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
+              <input type="text" id="pembimbing1Input" class="field combobox-input" placeholder="Cari nama atau NIP..." autocomplete="off" />
               <button type="button" class="combobox-clear" id="pembimbing1Clear" title="Hapus pilihan" style="display:none;">✕</button>
               <div class="combobox-dropdown hidden" id="pembimbing1Dropdown"></div>
             </div>
@@ -65,7 +65,7 @@
           <div class="pembimbing-field">
             <label class="label" for="pembimbing2Input">Pembimbing 2</label>
             <div class="combobox-wrapper" id="pembimbing2Wrap">
-              <input type="text" id="pembimbing2Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
+              <input type="text" id="pembimbing2Input" class="field combobox-input" placeholder="Cari nama atau NIP..." autocomplete="off" />
               <button type="button" class="combobox-clear" id="pembimbing2Clear" title="Hapus pilihan" style="display:none;">✕</button>
               <div class="combobox-dropdown hidden" id="pembimbing2Dropdown"></div>
             </div>
@@ -111,14 +111,17 @@
           </table>
         </div>
 
-        <p class="hint">Tanggal auto jadi DD-MM-YYYY saat export. Tombol ✨ buat generate uraian otomatis pakai AI.</p>
+        <p class="hint">Tanggal dikonversi menjadi format DD-MM-YYYY saat diunduh. Gunakan tombol Auto-Generate untuk mengisi uraian otomatis.</p>
       </section>
 
       <!-- Bottom Row: AI Info & Format CSV side by side -->
       <div class="bottom-grid">
         <section class="panel" id="aiPanel">
-          <h2 class="section-title">✨ AI Uraian</h2>
-          <p class="hint" style="margin:0">Klik tombol ✨ di kolom uraian buat generate otomatis. Gratis, ga perlu API key. (Agak lambat ~10 detik, sabar ya.)</p>
+          <h2 class="section-title">
+            <svg class="section-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 6px;"><path d="M12 3l1.9 5.7a2 2 0 001.4 1.4L21 12l-5.7 1.9a2 2 0 00-1.4 1.4L12 21l-1.9-5.7a2 2 0 00-1.4-1.4L3 12l5.7-1.9a2 2 0 001.4-1.4L12 3z"/></svg>
+            Auto-Generate Uraian (AI)
+          </h2>
+          <p class="hint" style="margin:0">Gunakan tombol generator di kolom uraian untuk membuat deskripsi bimbingan akademis secara otomatis tanpa API key. (Proses membutuhkan waktu ±10 detik).</p>
         </section>
 
         <section class="panel">
@@ -150,33 +153,42 @@
     <div id="soundModalOverlay" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
-          <h2 class="modal-title">⚙️ Pengaturan & Sound</h2>
+          <h2 class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 6px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Pengaturan & Sound
+          </h2>
           <button id="closeSoundModal" type="button" class="modal-close" title="Tutup Modal">✕</button>
         </div>
         <div class="modal-body">
           <!-- Section 1: Mode Tampilan (Theme) -->
           <div class="setting-section">
-            <h3 class="setting-subtitle">🎨 Mode Tampilan (Theme)</h3>
-            <p class="hint" style="margin:0 0 12px">Pilih tema tampilan favorit kamu.</p>
+            <h3 class="setting-subtitle">Mode Tampilan (Tema)</h3>
+            <p class="hint" style="margin:0 0 12px">Pilih tema tampilan yang diinginkan.</p>
             <div class="theme-option-group">
               <label class="theme-option">
                 <input type="radio" name="themeMode" value="dark" checked />
                 <span class="theme-option-card">
-                  <span class="theme-option-icon">🌙</span>
+                  <span class="theme-option-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                  </span>
                   <span class="theme-option-label">Dark Mode (Default)</span>
                 </span>
               </label>
               <label class="theme-option">
                 <input type="radio" name="themeMode" value="light" />
                 <span class="theme-option-card">
-                  <span class="theme-option-icon">☀️</span>
+                  <span class="theme-option-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                  </span>
                   <span class="theme-option-label">Light Mode</span>
                 </span>
               </label>
               <label class="theme-option">
                 <input type="radio" name="themeMode" value="system" />
                 <span class="theme-option-card">
-                  <span class="theme-option-icon">💻</span>
+                  <span class="theme-option-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  </span>
                   <span class="theme-option-label">Ikuti Sistem</span>
                 </span>
               </label>
@@ -187,16 +199,16 @@
 
           <!-- Section 2: Custom Sound Effects -->
           <div class="setting-section">
-            <h3 class="setting-subtitle">🔊 Custom Sound Effects</h3>
-            <p class="hint" style="margin:0 0 14px">Pilih preset atau tempelkan link MP3 langsung dari <a href="https://www.myinstants.com" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; text-decoration:underline;">MyInstants.com</a>!</p>
+            <h3 class="setting-subtitle">Efek Suara (Custom Sound)</h3>
+            <p class="hint" style="margin:0 0 14px">Pilih preset atau tautkan audio MP3 langsung dari <a href="https://www.myinstants.com" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; text-decoration:underline;">MyInstants.com</a>.</p>
 
             <div style="margin-bottom:14px;">
               <label class="label" for="soundPresetSelect">Preset Sound</label>
               <select id="soundPresetSelect" class="field">
-                <option value="default">Default Synth (Satisfying Soft)</option>
-                <option value="pop">Pop / Bubble Sound (MyInstants)</option>
+                <option value="default">Default Synth (Soft Accent)</option>
+                <option value="pop">Pop / Bubble Sound</option>
                 <option value="minecraft">Minecraft Sound Effects</option>
-                <option value="custom">Custom MP3 Link (Bebas Input)</option>
+                <option value="custom">Custom MP3 Link</option>
               </select>
             </div>
             <div style="margin-bottom:14px;">
@@ -215,7 +227,10 @@
         </div>
         <div class="modal-footer">
           <button id="saveSoundBtn" type="button" class="btn btn-primary">Simpan Pengaturan</button>
-          <button id="testSoundBtn" type="button" class="btn btn-secondary">🔊 Tes Suara</button>
+          <button id="testSoundBtn" type="button" class="btn btn-secondary">
+            <svg class="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            Tes Suara
+          </button>
           <button id="resetSoundBtn" type="button" class="btn btn-danger">Reset Default</button>
         </div>
       </div>
@@ -243,13 +258,13 @@
         </div>
 
         <div class="tour-body">
-          <div id="tourIconWrap" class="tour-icon-wrap">🚀</div>
+          <div id="tourIconWrap" class="tour-icon-wrap"></div>
           <div class="tour-content-wrap">
             <h3 id="tourTitle" class="tour-title">Judul Langkah</h3>
             <p id="tourDescription" class="tour-desc">Penjelasan langkah penggunaan...</p>
             <div id="tourTipBox" class="tour-tip-box">
-              <span class="tour-tip-icon">💡</span>
-              <span id="tourTipText" class="tour-tip-text">Tips efisiensi untuk kamu!</span>
+              <span class="tour-tip-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+              <span id="tourTipText" class="tour-tip-text">Tips efisiensi untuk Anda</span>
             </div>
           </div>
         </div>

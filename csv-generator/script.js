@@ -39,13 +39,13 @@
     toast.className = "toast-card toast-" + type;
 
     var iconMap = {
-      info: 'ℹ️',
-      success: '✓',
-      warning: '⚠️',
-      danger: '✕'
+      info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+      success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+      warning: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      danger: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
     };
 
-    toast.innerHTML = '<span class="toast-icon">' + (iconMap[type] || 'ℹ️') + '</span>'
+    toast.innerHTML = '<span class="toast-icon">' + (iconMap[type] || iconMap.info) + '</span>'
                     + '<span class="toast-msg">' + escapeHtml(message) + '</span>';
 
     toastContainer.appendChild(toast);
@@ -612,7 +612,7 @@
   var SVG_ICONS = {
     up: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>',
     down: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>',
-    ai: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg> ✨',
+    ai: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>',
     dup: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
     del: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>'
   };
@@ -846,7 +846,7 @@
       a.remove();
       URL.revokeObjectURL(url);
 
-      downloadBtn.innerHTML = '<span>✓ CSV Terunduh!</span>';
+      downloadBtn.innerHTML = '<svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="btn-text">CSV Terunduh</span>';
       setTimeout(function() {
         downloadBtn.innerHTML = originalHtml;
         downloadBtn.classList.remove("btn-loading");
@@ -955,7 +955,7 @@
       })
       .finally(function() {
         btnEl.disabled = false;
-        btnEl.textContent = "✨";
+        btnEl.innerHTML = SVG_ICONS.ai;
       });
   }
 
@@ -1032,7 +1032,7 @@
         a.remove();
 
         playSound.success();
-        downloadExtBtn.innerHTML = '<span>✓ File Diunduh!</span>';
+        downloadExtBtn.innerHTML = '<svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="btn-text">File Diunduh</span>';
         setTimeout(function() {
           downloadExtBtn.innerHTML = originalHtml;
           downloadExtBtn.classList.remove("btn-loading");
@@ -1239,50 +1239,50 @@
   var tourSteps = [
     {
       targetId: "downloadExtBtn",
-      title: "🧩 Step 1: Siapkan Extension / Script",
-      icon: "🧩",
-      desc: "Untuk mengotomatisasi pengisian bimbingan di E-TA FT UNMUL, download Extension Chrome (.zip) atau pasang script Tampermonkey terlebih dahulu.",
-      tip: "Instalasi ini cukup dilakukan 1 kali saja di browser kamu.",
+      title: "Step 1: Siapkan Extension / Script",
+      icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>',
+      desc: "Untuk mengotomatisasi pengisian form bimbingan di E-TA FT UNMUL, unduh Extension Chrome (.zip) atau pasang script Tampermonkey terlebih dahulu.",
+      tip: "Instalasi ini cukup dilakukan 1 kali pada browser Anda.",
       prefPosition: "bottom"
     },
     {
       targetId: "panelPembimbing",
-      title: "👨‍🏫 Step 2: Atur Dosen Pembimbing",
-      icon: "🔍",
-      desc: "Ketik nama atau NIP Dosen Pembimbing 1 & Pembimbing 2. Setelah diset, kamu tinggal memilih P1 atau P2 di setiap baris bimbingan secara instan.",
+      title: "Step 2: Atur Dosen Pembimbing",
+      icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      desc: "Ketik nama atau NIP Dosen Pembimbing 1 & Pembimbing 2. Setelah diatur, Anda dapat memilih P1 atau P2 pada setiap baris bimbingan secara instan.",
       tip: "Ketik beberapa huruf nama dosen untuk rekomendasi otomatis.",
       prefPosition: "bottom"
     },
     {
       targetId: "panelTable",
-      title: "📝 Step 3: Isi Data Bimbingan",
-      icon: "✍️",
-      desc: "Masukkan Tanggal, Posisi (Proposal/Hasil/Skripsi), Dosen, dan Uraian. Gunakan tombol 'Tambah Baris' atau ikon duplikat 📋 di kolom aksi.",
-      tip: "Gunakan tombol duplikat 📋 untuk mempercepat pembuatan baris baru!",
+      title: "Step 3: Isi Data Bimbingan",
+      icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+      desc: "Masukkan Tanggal, Posisi (Proposal/Hasil/Skripsi), Dosen, dan Uraian. Gunakan tombol 'Tambah Baris' atau ikon duplikat pada kolom aksi.",
+      tip: "Gunakan tombol duplikat untuk mempercepat pembuatan baris baru.",
       prefPosition: "top"
     },
     {
       targetId: "aiPanel",
-      title: "✨ Step 4: Generate Uraian dengan AI",
-      icon: "✨",
-      desc: "Bingung mau tulis uraian apa? Klik tombol ✨ di kolom uraian tabel untuk membuat kalimat deskripsi bimbingan akademis otomatis!",
-      tip: "Fitur AI ini 100% gratis, praktis, dan tidak memerlukan API key.",
+      title: "Step 4: Auto-Generate Uraian",
+      icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.7a2 2 0 001.4 1.4L21 12l-5.7 1.9a2 2 0 00-1.4 1.4L12 21l-1.9-5.7a2 2 0 00-1.4-1.4L3 12l5.7-1.9a2 2 0 001.4-1.4L12 3z"/></svg>',
+      desc: "Klik tombol generator di kolom uraian tabel untuk membuat kalimat deskripsi bimbingan akademis secara otomatis.",
+      tip: "Fitur ini dapat digunakan secara gratis tanpa perlu mengonfigurasi API key.",
       prefPosition: "top"
     },
     {
       targetId: "downloadCsv",
-      title: "📥 Step 5: Unduh CSV & Import ke Extension",
-      icon: "🚀",
-      desc: "Jika data bimbingan sudah lengkap, klik 'Unduh CSV'. Buka halaman E-TA UNMUL di browser, buka Extension Chrome, import file CSV, lalu klik 'Mulai'!",
-      tip: "Extension akan otomatis mengisi & mengirim form bimbingan satu per satu.",
+      title: "Step 5: Unduh CSV & Import ke Extension",
+      icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>',
+      desc: "Setelah data bimbingan lengkap, klik 'Unduh CSV'. Buka portal E-TA UNMUL di browser, buka Extension Chrome, import file CSV, lalu klik 'Mulai'.",
+      tip: "Extension akan mengisi dan mengirim form bimbingan satu demi satu secara otomatis.",
       prefPosition: "bottom"
     },
     {
       targetId: "floatingSoundBtn",
-      title: "⚙️ Step 6: Mode Tampilan & Sound Effects",
-      icon: "⚙️",
-      desc: "Klik tombol gear di pojok kanan bawah ini untuk mengganti Mode Tampilan (Dark Mode, Light Mode, atau Ikuti Sistem) serta Custom Sound Effects!",
-      tip: "Kamu bisa mengulang panduan ini kapan saja via tombol '🚀 Panduan Interaktif' di atas.",
+      title: "Step 6: Pengaturan Mode & Suara",
+      icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+      desc: "Klik ikon pengaturan di sudut kanan bawah untuk mengatur Mode Tampilan (Dark, Light, Sistem) dan Efek Suara.",
+      tip: "Anda dapat mengulang panduan ini kapan saja melalui tombol 'Panduan Interaktif' di bagian atas.",
       prefPosition: "top"
     }
   ];
@@ -1355,7 +1355,12 @@
     var progressPercent = ((index + 1) / tourSteps.length) * 100;
     tourProgressBar.style.width = progressPercent + "%";
 
-    tourIconWrap.textContent = step.icon || "💡";
+    if (typeof step.icon === "string" && step.icon.indexOf("<svg") >= 0) {
+      tourIconWrap.innerHTML = step.icon;
+    } else {
+      tourIconWrap.textContent = step.icon || "";
+    }
+
     tourTitle.textContent = step.title;
     tourDescription.textContent = step.desc;
 
@@ -1369,11 +1374,11 @@
     tourPrevBtn.disabled = (index === 0);
 
     if (index === tourSteps.length - 1) {
-      tourNextBtn.textContent = "Selesai 🎉";
+      tourNextBtn.textContent = "Selesai";
       tourNextBtn.classList.remove("btn-primary");
       tourNextBtn.classList.add("btn-tour");
     } else {
-      tourNextBtn.textContent = "Lanjut →";
+      tourNextBtn.textContent = "Lanjut";
       tourNextBtn.classList.add("btn-primary");
       tourNextBtn.classList.remove("btn-tour");
     }
@@ -1400,7 +1405,7 @@
     } catch(err) {}
 
     if (isFinished) {
-      showToast("Selamat! Kamu sudah paham cara pakai E-TA Tools 🎉", "success");
+      showToast("Panduan interaktif telah selesai.", "success");
       playSound.add();
     }
   }
