@@ -3,20 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Generator CSV Bimbingan</title>
+    <title>Generator CSV Bimbingan - E-TA FT UNMUL</title>
+    <!-- Plus Jakarta Sans & JetBrains Mono Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="page">
+    <div class="grid-bg"></div>
+
     <main class="container">
       <header class="hero">
         <p class="eyebrow">E-TA FT UNMUL</p>
         <h1 class="hero-title">Generator CSV Bimbingan</h1>
-        <p class="hero-sub">Isi baris bimbingan, lalu unduh CSV untuk dipakai di extension.</p>
-        <div class="hero-actions" style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-          <a href="extension.zip" download class="btn btn-primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <p class="hero-sub">Isi baris bimbingan, lalu unduh CSV untuk dipakai di Chrome extension.</p>
+        <div class="hero-actions">
+          <a href="extension.zip" download class="btn btn-primary">
             🧩 Download Extension (.zip)
           </a>
-          <a href="https://raw.githubusercontent.com/miezlearning/e-ta-tools/main/skrip.js" target="_blank" class="btn btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <a href="https://raw.githubusercontent.com/miezlearning/e-ta-tools/main/skrip.js" target="_blank" class="btn btn-secondary">
             📜 Install Tampermonkey Script
           </a>
         </div>
@@ -25,12 +31,12 @@
       <!-- Pengaturan Pembimbing -->
       <section class="panel">
         <h2 class="section-title">1. Pilih Dosen Pembimbing</h2>
-        <p class="hint" style="margin:0 0 16px">Cari dan pilih dosen pembimbing kamu di bawah ini (atau klik tombol "+ P1 / P2" di daftar referensi dosen).</p>
+        <p class="hint" style="margin:0 0 16px">Cari dan pilih dosen pembimbing kamu di bawah ini (atau klik "+ P1 / P2" di daftar dosen).</p>
         <div class="pembimbing-grid">
           <div class="pembimbing-field">
             <label class="label" for="pembimbing1Input">Pembimbing 1</label>
             <div class="combobox-wrapper" id="pembimbing1Wrap">
-              <input type="text" id="pembimbing1Input" class="field combobox-input" placeholder="🔍 Ketik nama atau NIP..." autocomplete="off" />
+              <input type="text" id="pembimbing1Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
               <button type="button" class="combobox-clear" id="pembimbing1Clear" title="Hapus pilihan" style="display:none;">✕</button>
               <div class="combobox-dropdown hidden" id="pembimbing1Dropdown"></div>
             </div>
@@ -39,7 +45,7 @@
           <div class="pembimbing-field">
             <label class="label" for="pembimbing2Input">Pembimbing 2</label>
             <div class="combobox-wrapper" id="pembimbing2Wrap">
-              <input type="text" id="pembimbing2Input" class="field combobox-input" placeholder="🔍 Ketik nama atau NIP..." autocomplete="off" />
+              <input type="text" id="pembimbing2Input" class="field combobox-input" placeholder="🔍 Cari nama atau NIP..." autocomplete="off" />
               <button type="button" class="combobox-clear" id="pembimbing2Clear" title="Hapus pilihan" style="display:none;">✕</button>
               <div class="combobox-dropdown hidden" id="pembimbing2Dropdown"></div>
             </div>
@@ -54,7 +60,7 @@
         <div class="toolbar">
           <button id="addRow" class="btn btn-secondary">+ Tambah Baris</button>
           <button id="downloadCsv" class="btn btn-primary">⬇ Unduh CSV</button>
-          <button id="clearAll" class="btn btn-secondary">Reset</button>
+          <button id="clearAll" class="btn btn-danger">Reset</button>
         </div>
 
         <div class="table-wrap">

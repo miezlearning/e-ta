@@ -1,21 +1,27 @@
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
-
 :root {
-  --primary: #f54e00;
-  --primary-active: #d04200;
-  --ink: #f1f0ea;
-  --body: #c9c6bd;
-  --muted: #9c988d;
-  --hairline: #2a2923;
-  --hairline-strong: #3a382f;
-  --canvas: #11100c;
-  --canvas-soft: #171611;
-  --surface-card: #1b1a14;
-  --field-bg: #14130f;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --font-sans: "CursorGothic", system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-code: "JetBrains Mono", "Fira Code", monospace;
+  /* Modern Minimalist Dark Palette (Vercel / Linear inspired) */
+  --canvas: #09090b;
+  --surface-card: #121215;
+  --surface-card-hover: #17171c;
+  --field-bg: #0d0d0f;
+
+  /* Primary Accent: Refined Warm Orange (Non-neon, Elegant) */
+  --primary: #ea580c;
+  --primary-hover: #c2410c;
+
+  /* Typography & Lines */
+  --ink: #f4f4f5;
+  --body: #a1a1aa;
+  --muted: #71717a;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+
+  /* Radius & Typography */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-code: "JetBrains Mono", monospace;
 }
 
 * {
@@ -28,53 +34,87 @@ body.page {
   color: var(--body);
   background: var(--canvas);
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
+/* ── Minimalist Grid Pattern ────────────────────────────────────────────── */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Main Layout ───────────────────────────────────────────────────────── */
 .container {
-  max-width: 1080px;
+  position: relative;
+  z-index: 10;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 48px 20px 80px;
 }
 
-/* Hero */
+/* ── Hero Section ────────────────────────────────────────────────────────── */
 .hero {
   border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-lg);
   padding: 32px;
-  background: var(--canvas-soft);
+  background: var(--surface-card);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .eyebrow {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: 11px;
+  font-family: var(--font-code);
   text-transform: uppercase;
-  letter-spacing: 0.88px;
-  color: var(--muted);
+  letter-spacing: 1.5px;
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .hero-title {
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   font-size: 32px;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.72px;
+  letter-spacing: -0.8px;
   color: var(--ink);
 }
 
 .hero-sub {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--body);
 }
 
-/* Panel */
+.hero-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── Panels & Cards ──────────────────────────────────────────────────────── */
 .panel {
   margin-top: 24px;
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
   padding: 24px;
   background: var(--surface-card);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease;
+}
+
+.panel:hover {
+  border-color: var(--hairline-strong);
 }
 
 .section-title {
@@ -82,9 +122,10 @@ body.page {
   font-size: 18px;
   font-weight: 600;
   color: var(--ink);
+  letter-spacing: -0.3px;
 }
 
-/* Buttons */
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -94,33 +135,57 @@ body.page {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border: 1px solid var(--hairline-strong);
-  background: var(--surface-card);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--ink);
-  padding: 10px 16px;
+  padding: 8px 16px;
   height: 40px;
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 500;
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 
 .btn:hover {
-  border-color: var(--muted);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--body);
 }
 
 .btn.btn-primary {
   background: var(--primary);
   color: #ffffff;
-  border-color: transparent;
+  border: 1px solid transparent;
+  font-weight: 600;
 }
 
 .btn.btn-primary:hover {
-  background: var(--primary-active);
+  background: var(--primary-hover);
 }
 
-/* Fields */
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+/* ── Inputs & Fields ─────────────────────────────────────────────────────── */
 .field {
   width: 100%;
   border: 1px solid var(--hairline-strong);
@@ -130,11 +195,13 @@ body.page {
   font-family: var(--font-sans);
   color: var(--ink);
   background: var(--field-bg);
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .field:focus {
   outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.2);
 }
 
 .field-textarea {
@@ -145,23 +212,26 @@ body.page {
 .label {
   display: block;
   font-size: 11px;
+  font-family: var(--font-code);
   text-transform: uppercase;
-  letter-spacing: 0.88px;
+  letter-spacing: 1px;
   color: var(--muted);
   margin-bottom: 6px;
+  font-weight: 500;
 }
 
 .hint {
-  margin: 16px 0 0;
-  font-size: 14px;
-  color: var(--muted);
+  margin: 14px 0 0;
+  font-size: 13.5px;
+  color: var(--body);
+  line-height: 1.5;
 }
 
-/* Pembimbing & Combobox */
+/* ── Combobox Component ─────────────────────────────────────────────────── */
 .pembimbing-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 16px;
 }
 
 .combobox-wrapper {
@@ -190,8 +260,8 @@ body.page {
 }
 
 .combobox-clear:hover {
-  color: var(--primary);
-  background: var(--hairline);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .combobox-dropdown {
@@ -199,13 +269,13 @@ body.page {
   top: calc(100% + 4px);
   left: 0;
   right: 0;
-  max-height: 260px;
+  max-height: 240px;
   overflow-y: auto;
-  background: var(--surface-card);
-  border: 1px solid var(--primary);
+  background: #16161a;
+  border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-md);
   z-index: 100;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .combobox-item {
@@ -225,7 +295,7 @@ body.page {
 
 .combobox-item:hover,
 .combobox-item.active {
-  background: var(--hairline-strong);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .combobox-item-name {
@@ -241,42 +311,18 @@ body.page {
   white-space: nowrap;
 }
 
-.dosen-actions {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-.btn-mini {
-  padding: 4px 8px;
-  font-size: 11px;
-  height: 26px;
-  border-radius: 4px;
-  border: 1px solid var(--hairline-strong);
-  background: var(--field-bg);
-  color: var(--ink);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-}
-
-.btn-mini:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: var(--canvas-soft);
-}
-
-/* Table */
+/* ── Table Styling ──────────────────────────────────────────────────────── */
 .table-wrap {
-  margin-top: 4px;
+  margin-top: 6px;
   border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow-x: auto;
+  background: var(--field-bg);
 }
 
 .table {
   width: 100%;
-  min-width: 820px;
+  min-width: 840px;
   border-collapse: collapse;
   font-size: 14px;
   color: var(--ink);
@@ -285,22 +331,23 @@ body.page {
 .table-head {
   text-align: left;
   font-size: 11px;
+  font-family: var(--font-code);
   text-transform: uppercase;
-  letter-spacing: 0.88px;
+  letter-spacing: 1px;
   color: var(--muted);
-  background: var(--field-bg);
-  padding: 12px;
+  background: #141418;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--hairline);
   position: sticky;
   top: 0;
 }
 
-.th-no { width: 40px; text-align: center; }
-.th-order { width: 56px; text-align: center; }
+.th-no { width: 44px; text-align: center; }
+.th-order { width: 60px; text-align: center; }
 .th-date { width: 150px; }
-.th-posisi { width: 130px; }
+.th-posisi { width: 135px; }
 .th-dosen { width: 180px; }
-.th-aksi { width: 90px; text-align: center; }
+.th-aksi { width: 88px; text-align: center; }
 
 .table-cell {
   padding: 10px 12px;
@@ -308,11 +355,16 @@ body.page {
   vertical-align: top;
 }
 
+tr:hover .table-cell {
+  background: rgba(255, 255, 255, 0.015);
+}
+
 .cell-no {
   text-align: center;
   color: var(--muted);
+  font-family: var(--font-code);
   font-size: 13px;
-  padding-top: 18px;
+  padding-top: 16px;
 }
 
 .cell-order {
@@ -322,7 +374,7 @@ body.page {
 .order-wrap {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   align-items: center;
 }
 
@@ -330,103 +382,99 @@ body.page {
   width: 28px;
   height: 24px;
   border: 1px solid var(--hairline-strong);
-  border-radius: 6px;
+  border-radius: 4px;
   background: transparent;
-  color: var(--ink);
+  color: var(--body);
   font-size: 10px;
   cursor: pointer;
   line-height: 1;
+  transition: all 0.12s;
 }
 
 .btn-order:hover {
-  border-color: var(--muted);
-  background: var(--field-bg);
-}
-
-/* Uraian + AI */
-.uraian-wrap {
-  display: flex;
-  gap: 8px;
-  align-items: stretch;
-}
-
-.uraian-wrap .field {
-  flex: 1;
+  border-color: var(--body);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .btn-ai {
   border: 1px solid var(--hairline-strong);
-  background: transparent;
-  color: var(--primary);
-  padding: 0 12px;
-  border-radius: var(--radius-md);
-  font-size: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  height: 44px;
   white-space: nowrap;
 }
 
-.btn-ai:hover:not(:disabled) {
-  background: var(--field-bg);
+.btn-ai:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--body);
 }
 
-.btn-ai:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* Row actions */
-.row-actions {
+.uraian-wrap {
   display: flex;
-  gap: 6px;
-  justify-content: center;
+  gap: 8px;
+  align-items: flex-start;
 }
 
-.btn-dup,
-.btn-delete {
+.actions-wrap {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-dup, .btn-del {
   width: 32px;
   height: 32px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--hairline-strong);
-  border-radius: var(--radius-md);
   background: transparent;
+  color: var(--body);
+  font-size: 13px;
   cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
 }
 
 .btn-dup:hover {
-  border-color: var(--muted);
-  background: var(--field-bg);
+  border-color: var(--body);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
 }
 
-.btn-delete {
+.btn-del:hover {
+  border-color: rgba(239, 68, 68, 0.5);
   color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
 }
 
-.btn-delete:hover {
-  border-color: #f87171;
-  background: rgba(248, 113, 113, 0.1);
-}
-
-/* Code block */
 .code-block {
-  margin: 0;
-  padding: 16px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
+  margin: 10px 0 0;
+  padding: 14px;
   background: var(--field-bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
   font-family: var(--font-code);
   font-size: 13px;
-  color: var(--ink);
+  color: var(--body);
   overflow-x: auto;
+  line-height: 1.5;
 }
 
-/* Daftar dosen */
+/* ── Dosen Reference List ───────────────────────────────────────────────── */
 .dosen-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-height: 360px;
+  gap: 6px;
+  max-height: 300px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -435,39 +483,69 @@ body.page {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
   background: var(--field-bg);
+  border: 1px solid var(--hairline);
+  transition: border-color 0.12s;
+}
+
+.dosen-item:hover {
+  border-color: var(--hairline-strong);
 }
 
 .dosen-name {
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--ink);
+  font-weight: 400;
+}
+
+.dosen-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .dosen-nip {
   font-family: var(--font-code);
-  font-size: 13px;
-  color: var(--primary);
+  font-size: 12px;
+  color: var(--muted);
   white-space: nowrap;
   user-select: all;
   cursor: pointer;
+}
+
+.btn-mini {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 4px;
+  border: 1px solid var(--hairline-strong);
+  background: transparent;
+  color: var(--body);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.12s;
+}
+
+.btn-mini:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(234, 88, 12, 0.08);
 }
 
 .hidden {
   display: none !important;
 }
 
-/* Responsive */
-@media (max-width: 720px) {
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
   .container {
-    padding: 28px 14px 60px;
+    padding: 24px 14px 48px;
   }
 
   .hero {
-    padding: 24px;
+    padding: 20px;
   }
 
   .hero-title {
@@ -475,12 +553,12 @@ body.page {
   }
 
   .panel {
-    padding: 18px;
+    padding: 16px;
   }
 
   .pembimbing-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 14px;
   }
 
   .toolbar .btn {
@@ -490,6 +568,11 @@ body.page {
   .dosen-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 6px;
+  }
+
+  .dosen-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
