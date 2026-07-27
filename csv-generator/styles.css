@@ -939,6 +939,33 @@ tr:hover .table-cell {
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
+.btn-ai.generating {
+  background: rgba(99, 102, 241, 0.22);
+  border-color: #818cf8;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(129, 140, 248, 0.4);
+  cursor: wait;
+}
+
+.ai-pulse-spinner {
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+/* AI Generating Shimmer Animation on Textarea */
+.field-ai-loading {
+  background: linear-gradient(90deg, var(--field-bg) 0%, rgba(99, 102, 241, 0.18) 50%, var(--field-bg) 100%) !important;
+  background-size: 200% 100% !important;
+  animation: aiShimmer 1.4s infinite linear !important;
+  border-color: rgba(129, 140, 248, 0.6) !important;
+  box-shadow: 0 0 12px rgba(129, 140, 248, 0.25) !important;
+}
+
+@keyframes aiShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .btn-ai:active {
   transform: translateY(0) scale(0.97);
 }

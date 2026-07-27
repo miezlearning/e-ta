@@ -1162,7 +1162,12 @@
     }
 
     btnEl.disabled = true;
-    btnEl.textContent = "⏳";
+    btnEl.classList.add("generating");
+    btnEl.innerHTML = '<svg class="ai-pulse-spinner" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>';
+
+    var originalPlaceholder = textareaEl.placeholder;
+    textareaEl.classList.add("field-ai-loading");
+    textareaEl.placeholder = "Sedang meracik uraian akademis dengan AI...";
 
     var url = AI_API_URL
       + "?prompt=" + encodeURIComponent(userPrompt)
@@ -1205,7 +1210,10 @@
       })
       .finally(function() {
         btnEl.disabled = false;
+        btnEl.classList.remove("generating");
         btnEl.innerHTML = SVG_ICONS.ai;
+        textareaEl.classList.remove("field-ai-loading");
+        textareaEl.placeholder = originalPlaceholder || "Isi bimbingan";
       });
   }
 
