@@ -1,10 +1,11 @@
-name: Deploy CSV Generator to Pages
+name: Deploy CSV Generator & Extension to Pages
 
 on:
   push:
     branches: [main]
     paths:
       - 'csv-generator/**'
+      - 'extension/**'
   workflow_dispatch:
 
 permissions:
@@ -28,6 +29,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      - name: Package extension ZIP
+        run: |
+          cd extension
+          zip -r ../csv-generator/extension.zip .
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

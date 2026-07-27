@@ -31,13 +31,16 @@ Simpelnya:
 
 ## Quick Start
 
-### 1. Install Extension
+### 1. Download & Install Extension
 
-Belum pernah install? Ikutin panduan ini:
+Tidak perlu download seluruh repository! Kamu bisa download file ZIP extension langsung:
 
-👉 [**Panduan Instalasi**](docs/INSTALL.md)
+* 🧩 [**Download Extension (.zip)**](https://eta.miez.site/extension.zip) *(Rekomendasi Chrome/Edge/Brave)*
+* 📜 [**Install Tampermonkey Script**](https://raw.githubusercontent.com/miezlearning/e-ta-tools/main/skrip.js) *(Alternatif 1-klik)*
 
-Cuma butuh 2 menit. Tinggal load folder ke Chrome, selesai.
+👉 [**Panduan Instalasi Lengkap**](docs/INSTALL.md)
+
+Cuma butuh 1-2 menit. Tinggal extract ZIP → load folder ke Chrome, selesai.
 
 ### 2. Siapin CSV
 

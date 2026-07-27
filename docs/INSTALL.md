@@ -9,19 +9,20 @@
 
 ### 1. Download Extension
 
-Download atau clone folder `extension/` dari repository ini.
+Kamu **tidak perlu** meng-clone seluruh repository GitHub. Cukup gunakan salah satu opsi di bawah ini:
 
-```
-extension/
-├── manifest.json
-├── content.js
-├── page.js
-├── popup.html
-├── popup.css
-└── popup.js
-```
+#### Opsi A: Chrome Extension (Rekomendasi)
+1. Download file ZIP extension langsung melalui tombol/link ini: 👉 [**Download extension.zip**](https://eta.miez.site/extension.zip)
+2. Extract file `extension.zip` di komputer kamu (kamu akan mendapatkan folder `extension`).
 
-### 2. Buka Halaman Extensions di Chrome
+#### Opsi B: Tampermonkey Userscript (Alternatif 1-Klik)
+Jika kamu pengguna extension **Tampermonkey** atau **Violentmonkey**:
+1. Klik link script berikut: 👉 [**Install skrip.js**](https://raw.githubusercontent.com/miezlearning/e-ta-tools/main/skrip.js)
+2. Klik **Install** pada halaman konfirmasi Tampermonkey. Selesai!
+
+---
+
+### 2. Buka Halaman Extensions di Chrome (Khusus Opsi A)
 
 1. Buka Chrome
 2. Ketik `chrome://extensions` di address bar, lalu Enter
@@ -30,7 +31,7 @@ extension/
 ### 3. Load Extension
 
 1. Klik tombol **"Load unpacked"** (Muat yang belum dikemas)
-2. Pilih folder `extension/` yang sudah di-download
+2. Pilih folder `extension` hasil extract dari file ZIP tadi
 3. Extension akan muncul di daftar dengan nama **"E-TA FT UNMUL Bulk Bimbingan"**
 
 ### 4. Pin Extension (Opsional)
