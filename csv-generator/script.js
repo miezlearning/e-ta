@@ -1011,10 +1011,10 @@
     renderDosenList(dosenSearchEl.value);
   });
 
-  // ── Custom Sound Panel Event Wiring ───────────────────────────────────────
-  var soundToggleBtn = document.getElementById("soundToggleBtn");
-  var soundPanel = document.getElementById("soundPanel");
-  var closeSoundPanel = document.getElementById("closeSoundPanel");
+  // ── Floating Gear Sound Button & Modal Dialog Wiring ───────────────────────
+  var floatingSoundBtn = document.getElementById("floatingSoundBtn");
+  var soundModalOverlay = document.getElementById("soundModalOverlay");
+  var closeSoundModal = document.getElementById("closeSoundModal");
   var soundPresetSelect = document.getElementById("soundPresetSelect");
   var soundAddUrlInput = document.getElementById("soundAddUrl");
   var soundDupUrlInput = document.getElementById("soundDupUrl");
@@ -1030,20 +1030,38 @@
     if (soundDelUrlInput) soundDelUrlInput.value = customSoundConfig.delUrl || "";
   }
 
-  if (soundToggleBtn && soundPanel) {
-    soundToggleBtn.addEventListener("click", function() {
-      playSound.click();
-      soundPanel.classList.toggle("hidden");
-      syncSoundPanelInputs();
+  function openSoundModal() {
+    playSound.click();
+    syncSoundPanelInputs();
+    if (soundModalOverlay) soundModalOverlay.classList.remove("hidden");
+  }
+
+  function closeSoundModalFn() {
+    playSound.click();
+    if (soundModalOverlay) soundModalOverlay.classList.add("hidden");
+  }
+
+  if (floatingSoundBtn) {
+    floatingSoundBtn.addEventListener("click", openSoundModal);
+  }
+
+  if (closeSoundModal) {
+    closeSoundModal.addEventListener("click", closeSoundModalFn);
+  }
+
+  if (soundModalOverlay) {
+    soundModalOverlay.addEventListener("click", function(e) {
+      if (e.target === soundModalOverlay) {
+        closeSoundModalFn();
+      }
     });
   }
 
-  if (closeSoundPanel && soundPanel) {
-    closeSoundPanel.addEventListener("click", function() {
-      playSound.click();
-      soundPanel.classList.add("hidden");
-    });
-  }
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape" && soundModalOverlay && !soundModalOverlay.classList.contains("hidden")) {
+      closeSoundModalFn();
+    }
+  });
 
   if (soundPresetSelect) {
     soundPresetSelect.addEventListener("change", function() {
@@ -1068,6 +1086,7 @@
       saveSoundConfigToStorage();
       playSound.add();
       alert("✓ Custom sound berhasil disimpan!");
+      if (soundModalOverlay) soundModalOverlay.classList.add("hidden");
     });
   }
 
