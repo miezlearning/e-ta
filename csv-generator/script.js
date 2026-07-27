@@ -18,6 +18,187 @@
     }
   }
 
+  // ── Web Audio API Synth & Custom MP3 Sound Engine ─────────────────────────
+  var audioCtx = null;
+  var SOUND_STORAGE_KEY = "eta_custom_sound_config";
+  
+  var customSoundConfig = {
+    preset: "default",
+    addUrl: "",
+    dupUrl: "",
+    delUrl: ""
+  };
+
+  var SOUND_PRESETS = {
+    default: { addUrl: "", dupUrl: "", delUrl: "" },
+    pop: {
+      addUrl: "https://www.myinstants.com/media/sounds/pop-sound-effect.mp3",
+      dupUrl: "https://www.myinstants.com/media/sounds/pop-cat.mp3",
+      delUrl: "https://www.myinstants.com/media/sounds/disappear-sound-effect.mp3"
+    },
+    minecraft: {
+      addUrl: "https://www.myinstants.com/media/sounds/minecraft-item-pickup.mp3",
+      dupUrl: "https://www.myinstants.com/media/sounds/minecraft_click.mp3",
+      delUrl: "https://www.myinstants.com/media/sounds/minecraft-anvil-drop.mp3"
+    }
+  };
+
+  function getAudioContext() {
+    if (!audioCtx) {
+      var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
+    }
+    if (audioCtx && audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function playSynthClick() {
+    var ctx = getAudioContext();
+    if (!ctx) return;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(600, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.04);
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.04);
+  }
+
+  function playSynthAdd() {
+    var ctx = getAudioContext();
+    if (!ctx) return;
+    var now = ctx.currentTime;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(523.25, now);
+    osc.frequency.setValueAtTime(783.99, now + 0.05);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.12);
+  }
+
+  function playSynthDup() {
+    var ctx = getAudioContext();
+    if (!ctx) return;
+    var now = ctx.currentTime;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.06);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.08);
+  }
+
+  function playSynthDel() {
+    var ctx = getAudioContext();
+    if (!ctx) return;
+    var now = ctx.currentTime;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(450, now);
+    osc.frequency.exponentialRampToValueAtTime(150, now + 0.09);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.09);
+  }
+
+  function playSynthSuccess() {
+    var ctx = getAudioContext();
+    if (!ctx) return;
+    var now = ctx.currentTime;
+    [523.25, 659.25, 783.99].forEach(function(freq, idx) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+      gain.gain.setValueAtTime(0.1, now + idx * 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.15);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + idx * 0.06);
+      osc.stop(now + idx * 0.06 + 0.15);
+    });
+  }
+
+  function playAudioFile(url, fallbackFn) {
+    if (url && typeof url === "string" && url.trim()) {
+      try {
+        var a = new Audio(url.trim());
+        a.volume = 0.75;
+        var playPromise = a.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function() {
+            if (fallbackFn) fallbackFn();
+          });
+        }
+        return;
+      } catch (e) {}
+    }
+    if (fallbackFn) fallbackFn();
+  }
+
+  var playSound = {
+    click: function() {
+      playSynthClick();
+    },
+    add: function() {
+      playAudioFile(customSoundConfig.addUrl, playSynthAdd);
+    },
+    duplicate: function() {
+      playAudioFile(customSoundConfig.dupUrl, playSynthDup);
+    },
+    delete: function() {
+      playAudioFile(customSoundConfig.delUrl, playSynthDel);
+    },
+    success: function() {
+      playSynthSuccess();
+    }
+  };
+
+  function loadSoundConfig() {
+    try {
+      var raw = localStorage.getItem(SOUND_STORAGE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed) {
+          customSoundConfig.preset = parsed.preset || "default";
+          customSoundConfig.addUrl = parsed.addUrl || "";
+          customSoundConfig.dupUrl = parsed.dupUrl || "";
+          customSoundConfig.delUrl = parsed.delUrl || "";
+        }
+      }
+    } catch (e) {}
+  }
+
+  function saveSoundConfigToStorage() {
+    try {
+      localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(customSoundConfig));
+    } catch (e) {}
+  }
+
+  loadSoundConfig();
+
   // ── Data Dosen ─────────────────────────────────────────────────────────────
   var dosenData = [
     {id:"081251753882",name:"Ema Dwi Arsita, S.Ars., M.Ars."},
@@ -420,10 +601,12 @@
     var btnUp = makeIconBtn("up", "Naikkan baris", "btn-order");
     var btnDown = makeIconBtn("down", "Turunkan baris", "btn-order");
     btnUp.addEventListener("click", function() {
+      playSound.click();
       var prev = tr.previousElementSibling;
       if (prev) { tableBody.insertBefore(tr, prev); afterChange(); }
     });
     btnDown.addEventListener("click", function() {
+      playSound.click();
       var next = tr.nextElementSibling;
       if (next) { tableBody.insertBefore(next, tr); afterChange(); }
     });
@@ -469,6 +652,7 @@
     var uraianField = createField("textarea", data.uraian, "Isi bimbingan");
     var btnAi = makeIconBtn("ai", "Generate uraian otomatis dengan AI", "btn-ai");
     btnAi.addEventListener("click", function() {
+      playSound.click();
       generateUraian(posisiSelect.value, uraianField, btnAi);
     });
     uraianWrap.appendChild(uraianField);
@@ -480,6 +664,7 @@
     tdActions.className = "table-cell";
     var btnDup = makeIconBtn("dup", "Duplikat baris ini", "btn-dup");
     btnDup.addEventListener("click", function() {
+      playSound.duplicate();
       var clone = {
         date: dateField.value,
         posisi: posisiSelect.value,
@@ -491,6 +676,7 @@
     });
     var btnDel = makeIconBtn("del", "Hapus baris ini", "btn-delete");
     btnDel.addEventListener("click", function() {
+      playSound.delete();
       tr.remove();
       if (!tableBody.children.length) addRow();
       afterChange();
@@ -769,9 +955,19 @@
   });
 
   // ── Event wiring ──────────────────────────────────────────────────────────
-  addRowBtn.addEventListener("click", function() { addRow(); afterChange(); });
-  downloadBtn.addEventListener("click", handleDownloadCsv);
+  addRowBtn.addEventListener("click", function() {
+    playSound.add();
+    addRow();
+    afterChange();
+  });
+
+  downloadBtn.addEventListener("click", function() {
+    playSound.click();
+    handleDownloadCsv();
+  });
+
   clearBtn.addEventListener("click", function() {
+    playSound.click();
     if (!confirm("Reset semua baris? Data pembimbing tetap tersimpan.")) return;
     tableBody.innerHTML = "";
     addRow();
@@ -781,6 +977,7 @@
   var downloadExtBtn = document.getElementById("downloadExtBtn");
   if (downloadExtBtn) {
     downloadExtBtn.addEventListener("click", function() {
+      playSound.click();
       var originalHtml = downloadExtBtn.innerHTML;
       downloadExtBtn.classList.add("btn-loading");
       downloadExtBtn.innerHTML = '<svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> <span>Menyiapkan Extension...</span>';
@@ -793,6 +990,7 @@
         a.click();
         a.remove();
 
+        playSound.success();
         downloadExtBtn.innerHTML = '<span>✓ File Diunduh!</span>';
         setTimeout(function() {
           downloadExtBtn.innerHTML = originalHtml;
@@ -802,9 +1000,96 @@
     });
   }
 
+  dosenListEl.addEventListener("click", function(e) {
+    var target = e.target;
+    if (target.classList.contains("btn-set-p1") || target.classList.contains("btn-set-p2")) {
+      playSound.click();
+    }
+  });
+
   dosenSearchEl.addEventListener("input", function() {
     renderDosenList(dosenSearchEl.value);
   });
+
+  // ── Custom Sound Panel Event Wiring ───────────────────────────────────────
+  var soundToggleBtn = document.getElementById("soundToggleBtn");
+  var soundPanel = document.getElementById("soundPanel");
+  var closeSoundPanel = document.getElementById("closeSoundPanel");
+  var soundPresetSelect = document.getElementById("soundPresetSelect");
+  var soundAddUrlInput = document.getElementById("soundAddUrl");
+  var soundDupUrlInput = document.getElementById("soundDupUrl");
+  var soundDelUrlInput = document.getElementById("soundDelUrl");
+  var saveSoundBtn = document.getElementById("saveSoundBtn");
+  var testSoundBtn = document.getElementById("testSoundBtn");
+  var resetSoundBtn = document.getElementById("resetSoundBtn");
+
+  function syncSoundPanelInputs() {
+    if (soundPresetSelect) soundPresetSelect.value = customSoundConfig.preset || "default";
+    if (soundAddUrlInput) soundAddUrlInput.value = customSoundConfig.addUrl || "";
+    if (soundDupUrlInput) soundDupUrlInput.value = customSoundConfig.dupUrl || "";
+    if (soundDelUrlInput) soundDelUrlInput.value = customSoundConfig.delUrl || "";
+  }
+
+  if (soundToggleBtn && soundPanel) {
+    soundToggleBtn.addEventListener("click", function() {
+      playSound.click();
+      soundPanel.classList.toggle("hidden");
+      syncSoundPanelInputs();
+    });
+  }
+
+  if (closeSoundPanel && soundPanel) {
+    closeSoundPanel.addEventListener("click", function() {
+      playSound.click();
+      soundPanel.classList.add("hidden");
+    });
+  }
+
+  if (soundPresetSelect) {
+    soundPresetSelect.addEventListener("change", function() {
+      playSound.click();
+      var selected = soundPresetSelect.value;
+      if (SOUND_PRESETS[selected]) {
+        customSoundConfig.preset = selected;
+        customSoundConfig.addUrl = SOUND_PRESETS[selected].addUrl;
+        customSoundConfig.dupUrl = SOUND_PRESETS[selected].dupUrl;
+        customSoundConfig.delUrl = SOUND_PRESETS[selected].delUrl;
+        syncSoundPanelInputs();
+      }
+    });
+  }
+
+  if (saveSoundBtn) {
+    saveSoundBtn.addEventListener("click", function() {
+      customSoundConfig.preset = soundPresetSelect ? soundPresetSelect.value : "custom";
+      customSoundConfig.addUrl = soundAddUrlInput ? soundAddUrlInput.value.trim() : "";
+      customSoundConfig.dupUrl = soundDupUrlInput ? soundDupUrlInput.value.trim() : "";
+      customSoundConfig.delUrl = soundDelUrlInput ? soundDelUrlInput.value.trim() : "";
+      saveSoundConfigToStorage();
+      playSound.add();
+      alert("✓ Custom sound berhasil disimpan!");
+    });
+  }
+
+  if (testSoundBtn) {
+    testSoundBtn.addEventListener("click", function() {
+      playSound.add();
+      setTimeout(function() { playSound.duplicate(); }, 350);
+      setTimeout(function() { playSound.delete(); }, 700);
+    });
+  }
+
+  if (resetSoundBtn) {
+    resetSoundBtn.addEventListener("click", function() {
+      playSound.click();
+      customSoundConfig = { preset: "default", addUrl: "", dupUrl: "", delUrl: "" };
+      saveSoundConfigToStorage();
+      syncSoundPanelInputs();
+      alert("Custom sound di-reset ke Default Synth.");
+    });
+  }
+
+  syncSoundPanelInputs();
 
   // ── Init ──────────────────────────────────────────────────────────────────
   renderDosenList("");

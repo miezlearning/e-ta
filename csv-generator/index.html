@@ -70,11 +70,52 @@
         </div>
       </section>
 
+      <!-- Panel Custom Sound Effects -->
+      <section class="panel hidden" id="soundPanel">
+        <div class="section-header">
+          <h2 class="section-title">🔊 Custom Sound Effects (MyInstants / Custom MP3)</h2>
+          <button id="closeSoundPanel" type="button" class="btn-mini" style="padding:6px 12px">✕ Tutup</button>
+        </div>
+        <p class="hint" style="margin:0 0 16px">Pilih preset atau tempelkan link MP3 langsung dari <a href="https://www.myinstants.com" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; text-decoration:underline;">MyInstants.com</a>!</p>
+
+        <div class="pembimbing-grid" style="margin-bottom:16px;">
+          <div>
+            <label class="label" for="soundPresetSelect">Preset Sound</label>
+            <select id="soundPresetSelect" class="field">
+              <option value="default">Default Synth (Satisfying Soft)</option>
+              <option value="pop">Pop / Bubble Sound (MyInstants)</option>
+              <option value="minecraft">Minecraft Sound Effects</option>
+              <option value="custom">Custom MP3 Link (Bebas Input)</option>
+            </select>
+          </div>
+          <div>
+            <label class="label" for="soundAddUrl">Sound Tambah Baris (URL MP3)</label>
+            <input type="text" id="soundAddUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
+          </div>
+          <div>
+            <label class="label" for="soundDupUrl">Sound Duplikat Baris (URL MP3)</label>
+            <input type="text" id="soundDupUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
+          </div>
+          <div>
+            <label class="label" for="soundDelUrl">Sound Hapus Baris (URL MP3)</label>
+            <input type="text" id="soundDelUrl" class="field" placeholder="https://www.myinstants.com/media/sounds/..." />
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button id="saveSoundBtn" type="button" class="btn btn-primary">Simpan Custom Sound</button>
+          <button id="testSoundBtn" type="button" class="btn btn-secondary">🔊 Tes Suara</button>
+          <button id="resetSoundBtn" type="button" class="btn btn-danger">Reset Default</button>
+        </div>
+      </section>
+
       <!-- Tabel Bimbingan -->
       <section class="panel">
         <div class="section-header">
           <h2 class="section-title">2. Isi Data Bimbingan</h2>
           <div class="toolbar">
+            <button id="soundToggleBtn" type="button" class="btn btn-secondary" title="Pengaturan Custom Sound">
+              🔊 Suara
+            </button>
             <button id="addRow" class="btn btn-secondary">
               <svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Tambah Baris
