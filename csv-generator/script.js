@@ -1273,13 +1273,59 @@
     afterChange();
   });
 
+  // ── Extension Modal & Download Wiring ─────────────────────────────────────
   var downloadExtBtn = document.getElementById("downloadExtBtn");
+  var extModalOverlay = document.getElementById("extModalOverlay");
+  var closeExtModal = document.getElementById("closeExtModal");
+  var modalDownloadZipBtn = document.getElementById("modalDownloadZipBtn");
+  var toggleGuideBtn = document.getElementById("toggleGuideBtn");
+  var extInstallGuide = document.getElementById("extInstallGuide");
+
+  function openExtModal() {
+    playSound.click();
+    if (extModalOverlay) extModalOverlay.classList.remove("hidden");
+  }
+
+  function closeExtModalFn() {
+    playSound.click();
+    if (extModalOverlay) extModalOverlay.classList.add("hidden");
+  }
+
   if (downloadExtBtn) {
-    downloadExtBtn.addEventListener("click", function() {
+    downloadExtBtn.addEventListener("click", openExtModal);
+  }
+
+  if (closeExtModal) {
+    closeExtModal.addEventListener("click", closeExtModalFn);
+  }
+
+  if (extModalOverlay) {
+    extModalOverlay.addEventListener("click", function(e) {
+      if (e.target === extModalOverlay) {
+        closeExtModalFn();
+      }
+    });
+  }
+
+  if (toggleGuideBtn && extInstallGuide) {
+    toggleGuideBtn.addEventListener("click", function() {
       playSound.click();
-      var originalHtml = downloadExtBtn.innerHTML;
-      downloadExtBtn.classList.add("btn-loading");
-      downloadExtBtn.innerHTML = '<svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> <span>Menyiapkan Extension...</span>';
+      extInstallGuide.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      extInstallGuide.style.borderColor = "var(--primary)";
+      extInstallGuide.style.boxShadow = "0 0 16px rgba(234, 88, 12, 0.3)";
+      setTimeout(function() {
+        extInstallGuide.style.borderColor = "";
+        extInstallGuide.style.boxShadow = "";
+      }, 1500);
+    });
+  }
+
+  if (modalDownloadZipBtn) {
+    modalDownloadZipBtn.addEventListener("click", function() {
+      playSound.click();
+      var originalHtml = modalDownloadZipBtn.innerHTML;
+      modalDownloadZipBtn.classList.add("btn-loading");
+      modalDownloadZipBtn.innerHTML = '<svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> <span>Menyiapkan Extension...</span>';
       
       setTimeout(function() {
         var a = document.createElement("a");
@@ -1290,10 +1336,10 @@
         a.remove();
 
         playSound.success();
-        downloadExtBtn.innerHTML = '<svg class="btn-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="btn-text">File Diunduh</span>';
+        modalDownloadZipBtn.innerHTML = '<svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>File Diunduh!</span>';
         setTimeout(function() {
-          downloadExtBtn.innerHTML = originalHtml;
-          downloadExtBtn.classList.remove("btn-loading");
+          modalDownloadZipBtn.innerHTML = originalHtml;
+          modalDownloadZipBtn.classList.remove("btn-loading");
         }, 1500);
       }, 700);
     });
@@ -1357,8 +1403,13 @@
   }
 
   document.addEventListener("keydown", function(e) {
-    if (e.key === "Escape" && soundModalOverlay && !soundModalOverlay.classList.contains("hidden")) {
-      closeSoundModalFn();
+    if (e.key === "Escape") {
+      if (soundModalOverlay && !soundModalOverlay.classList.contains("hidden")) {
+        closeSoundModalFn();
+      }
+      if (extModalOverlay && !extModalOverlay.classList.contains("hidden")) {
+        closeExtModalFn();
+      }
     }
   });
 

@@ -1748,5 +1748,94 @@ html[data-theme="light"] .custom-tooltip-box {
   border-right: none;
 }
 
+/* ── Extension Modal & Step-by-Step Guide Styling ────────────────────────── */
+.ext-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ext-action-btn {
+  height: 46px;
+  font-size: 13.5px;
+  justify-content: center;
+}
+
+.ext-guide-box {
+  background: var(--field-bg);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.install-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.install-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.step-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(234, 88, 12, 0.16);
+  border: 1px solid var(--primary);
+  color: #fb923c;
+  font-family: var(--font-code);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-content {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.step-content strong {
+  color: var(--ink);
+  display: block;
+  margin-bottom: 2px;
+  font-size: 13px;
+}
+
+.step-content p {
+  margin: 0;
+  color: var(--body);
+}
+
+.step-content code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-code);
+  font-size: 12px;
+  color: var(--primary);
+}
+
+.ext-alt-box {
+  margin-top: 16px;
+  padding: 14px;
+  background: var(--field-bg);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 
 

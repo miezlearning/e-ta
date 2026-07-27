@@ -236,6 +236,97 @@
       </div>
     </div>
 
+    <!-- Modal Popup Extension Download & Installation Guide -->
+    <div id="extModalOverlay" class="modal-overlay hidden">
+      <div class="modal-card" style="max-width: 600px;">
+        <div class="modal-header">
+          <h2 class="modal-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 6px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Pemasangan & Unduh Extension
+          </h2>
+          <button id="closeExtModal" type="button" class="modal-close" title="Tutup Modal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="hint" style="margin: 0 0 18px;">
+            Pilih opsi di bawah ini untuk mengunduh paket extension Chrome atau melihat langkah-langkah pemasangannya secara mudah.
+          </p>
+
+          <!-- 2 Main Actions: Download ZIP vs View Guide -->
+          <div class="ext-modal-actions">
+            <button id="modalDownloadZipBtn" type="button" class="btn btn-primary ext-action-btn">
+              <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              <span>Unduh Extension (.zip)</span>
+            </button>
+            <button id="toggleGuideBtn" type="button" class="btn btn-secondary ext-action-btn">
+              <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span>Panduan Instalasi</span>
+            </button>
+          </div>
+
+          <!-- Step-by-Step Installation Guide (Langkah-Langkah) -->
+          <div id="extInstallGuide" class="ext-guide-box">
+            <h3 class="setting-subtitle" style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Langkah-Langkah Pemasangan (Chrome / Edge / Brave)
+            </h3>
+            
+            <div class="install-steps-list">
+              <div class="install-step-item">
+                <span class="step-badge">1</span>
+                <div class="step-content">
+                  <strong>Unduh & Ekstrak File ZIP</strong>
+                  <p>Klik <em>Unduh Extension (.zip)</em>, lalu ekstrak file ZIP ke dalam folder di komputer Anda.</p>
+                </div>
+              </div>
+
+              <div class="install-step-item">
+                <span class="step-badge">2</span>
+                <div class="step-content">
+                  <strong>Buka Halaman Extension Browser</strong>
+                  <p>Buka Chrome / Edge / Brave, lalu akses link <code>chrome://extensions</code> pada address bar.</p>
+                </div>
+              </div>
+
+              <div class="install-step-item">
+                <span class="step-badge">3</span>
+                <div class="step-content">
+                  <strong>Aktifkan Developer Mode</strong>
+                  <p>Nyalakan toggle <strong>Developer mode</strong> di sudut kanan atas halaman Extension.</p>
+                </div>
+              </div>
+
+              <div class="install-step-item">
+                <span class="step-badge">4</span>
+                <div class="step-content">
+                  <strong>Muat Extension (Load Unpacked)</strong>
+                  <p>Klik tombol <strong>Load unpacked</strong> di pojok kiri atas, lalu pilih folder hasil ekstrak ZIP.</p>
+                </div>
+              </div>
+
+              <div class="install-step-item">
+                <span class="step-badge">5</span>
+                <div class="step-content">
+                  <strong>Siap Digunakan!</strong>
+                  <p>Buka portal E-TA UNMUL, buka Extension dari toolbar, import CSV, dan klik <em>Mulai</em>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tampermonkey Alternative -->
+          <div class="ext-alt-box">
+            <div>
+              <strong style="font-size: 13px; color: var(--ink);">Alternatif Tampermonkey Script</strong>
+              <p style="margin: 2px 0 0; font-size: 12px; color: var(--body);">Tidak ingin meng-install ZIP? Pasang script Tampermonkey 1-klik.</p>
+            </div>
+            <a href="https://raw.githubusercontent.com/miezlearning/e-ta-tools/main/skrip.js" target="_blank" class="btn btn-secondary" style="height: 36px; font-size: 12px; flex-shrink: 0;">
+              Pasang Script
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Interactive Tour Guide Component -->
     <div id="tourOverlay" class="tour-overlay hidden" aria-hidden="true">
       <!-- Backdrop Dimmer with SVG Mask / Spotlight Box -->
